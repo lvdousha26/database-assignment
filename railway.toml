@@ -1,0 +1,7 @@
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "oil-well-system/Dockerfile"
+
+[deploy]
+port = 8080
+healthcheckPath = "/api/dashboard/health"

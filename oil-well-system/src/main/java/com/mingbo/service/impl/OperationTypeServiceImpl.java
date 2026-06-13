@@ -1,0 +1,41 @@
+package com.oilwell.service.impl;
+
+import com.oilwell.mapper.OperationTypeMapper;
+import com.oilwell.pojo.OperationType;
+import com.oilwell.service.OperationTypeService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class OperationTypeServiceImpl implements OperationTypeService {
+
+    @Autowired
+    private OperationTypeMapper operationTypeMapper;
+
+    @Override
+    public OperationType getById(Long id) {
+        return operationTypeMapper.selectById(id);
+    }
+
+    @Override
+    public List<OperationType> list() {
+        return operationTypeMapper.selectAll();
+    }
+
+    @Override
+    public void add(OperationType operationType) {
+        operationTypeMapper.insert(operationType);
+    }
+
+    @Override
+    public void update(OperationType operationType) {
+        operationTypeMapper.update(operationType);
+    }
+
+    @Override
+    public void delete(Long id) {
+        operationTypeMapper.deleteById(id);
+    }
+}

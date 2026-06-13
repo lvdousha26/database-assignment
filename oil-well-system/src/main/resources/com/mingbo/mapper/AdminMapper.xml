@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mingbo.mapper.AdminMapper">
+
+    <!-- 基础查询字段 -->
+    <sql id="simpleAdminColumns">
+        id, username, avatar
+    </sql>
+
+    <!-- 分页查询管理员 -->
+    <select id="selectAdminsByPage" resultType="com.mingbo.pojo.AdminInfo">
+        SELECT
+        <include refid="simpleAdminColumns"/>
+        FROM tb_user
+        WHERE role = '管理员'
+        <if test="search != null and search != ''">
+            AND (username LIKE CONCAT('%', #{search}, '%')
+            OR id LIKE CONCAT('%', #{search}, '%'))
+        </if>
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <!-- 统计管理员数量 -->
+    <select id="countAdmins" resultType="long">
+        SELECT COUNT(*)
+        FROM tb_user
+        WHERE role = '管理员'
+        <if test="search != null and search != ''">
+            AND (username LIKE CONCAT('%', #{search}, '%')
+            OR id LIKE CONCAT('%', #{search}, '%'))
+        </if>
+    </select>
+
+    <!-- 查询可申请的管理员(status=1) -->
+    <select id="selectAvailableAdmins" resultType="com.mingbo.pojo.AdminInfo">
+        SELECT
+        <include refid="simpleAdminColumns"/>
+        FROM tb_user u
+        WHERE u.role = '管理员'
+        AND u.status = 1
+        AND NOT EXISTS (
+          SELECT 1 FROM tb_authorization_request ar
+          WHERE ar.admin_id = u.id AND ar.user_id = #{userId}
+        )
+        <if test="search != null and search != ''">
+            AND (u.username LIKE CONCAT('%', #{search}, '%')
+            OR u.id LIKE CONCAT('%', #{search}, '%'))
+        </if>
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <!-- 统计可申请的管理员数量(status=1) -->
+    <select id="countAvailableAdmins" resultType="long">
+        SELECT COUNT(*)
+        FROM tb_user
+        WHERE role = '管理员'
+        AND status = 1
+        <if test="search != null and search != ''">
+            AND (username LIKE CONCAT('%', #{search}, '%')
+            OR id LIKE CONCAT('%', #{search}, '%'))
+        </if>
+    </select>
+
+</mapper>

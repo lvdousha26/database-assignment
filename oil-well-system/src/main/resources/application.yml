@@ -1,0 +1,44 @@
+# application.yml
+# 采油厂油水井作业成本管理系统
+server:
+  port: ${PORT:8080}
+  tomcat:
+    uri-encoding: UTF-8
+    relaxed-query-chars: '|,{,},[,]'
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${MYSQL_URL:jdbc:mysql://localhost:3306/tb_oil_well_cost?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=UTF-8}
+    username: ${MYSQL_USER:root}
+    password: ${MYSQL_PASSWORD:123456}
+    hikari:
+      initialization-fail-timeout: -1
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  web:
+    resources:
+      static-locations: classpath:/static/,classpath:/public/,file:./uploads/
+      add-mappings: false
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      timeout: 3000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 2
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+
+nvidia:
+  api:
+    url: ${NVIDIA_API_URL:https://api.stepfun.com/v1}
+    key: ${NVIDIA_API_KEY:}
+  model: ${NVIDIA_MODEL:step-3.5-flash}

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mingbo.mapper.AuthorityMapper">
+
+    <!-- 分页查询管理员 -->
+    <select id="getAuthoritiesByPage" resultType="com.mingbo.pojo.Authority">
+        SELECT auth.user_id, auth.admin_id, user.avatar, user.gender, auth.status
+        FROM tb_authorization AS auth, tb_user AS user, tb_user AS user2
+        WHERE auth.admin_id=user2.id AND auth.user_id=user.id AND user2.username = #{username}
+        LIMIT #{offset}, #{pageSize}
+    </select>
+</mapper>

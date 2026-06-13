@@ -1,0 +1,33 @@
+# MySQL data
+mysql-data/
+
+# Logs
+*.log
+backend.log
+
+# IDE
+.idea/
+*.iml
+
+# Build output
+target/
+*.class
+*.jar
+
+# Uploads
+oil-well-system/uploads/
+
+# IDE
+.vscode/
+
+# Build cache
+.vite/
+
+# Package manager
+pnpm-lock.yaml
+
+# Screenshots
+screenshot-*.png
+
+# Node
+node_modules/

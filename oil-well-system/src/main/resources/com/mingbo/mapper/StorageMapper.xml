@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mingbo.mapper.StorageMapper">
+    <!-- 定义resultMap处理驼峰映射 -->
+    <resultMap id="referenceResultMap" type="com.mingbo.pojo.ReferenceResource">
+        <id property="id" column="id" />
+        <result property="originalName" column="original_name"/>
+        <result property="resourceType" column="resource_type"/>
+        <result property="description" column="description"/>
+        <result property="uploadTime" column="upload_time"/>
+    </resultMap>
+
+    <select id="getMetaData" resultMap="referenceResultMap">
+        SELECT id, original_name, resource_type, description, upload_time, status
+        FROM tb_file_metadata WHERE admin_id=#{id}
+        ORDER BY id DESC
+        LIMIT #{begin}, #{size}
+    </select>
+</mapper>

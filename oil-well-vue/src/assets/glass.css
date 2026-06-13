@@ -1,0 +1,43 @@
+:root {
+  --glass-bg-light: rgba(0, 0, 0, 0.02);
+  --glass-bg: rgba(0, 0, 0, 0.03);
+  --glass-bg-medium: rgba(0, 0, 0, 0.05);
+  --glass-bg-heavy: rgba(0, 0, 0, 0.08);
+  --glass-bg-card: rgba(255, 255, 255, 0.85);
+  --glass-bg-card-hover: rgba(255, 255, 255, 0.95);
+  --glass-blur-light: blur(4px);
+  --glass-blur: blur(8px);
+  --glass-blur-strong: blur(12px);
+  --glass-border: 1px solid rgba(0, 0, 0, 0.08);
+  --glass-border-light: 1px solid rgba(0, 0, 0, 0.04);
+  --glass-radius: 12px;
+  --glass-radius-lg: 20px;
+  --glass-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  --glass-shadow-elevated: 0 4px 20px rgba(0, 0, 0, 0.10);
+  --glass-text: rgba(0, 0, 0, 0.88);
+  --glass-text-secondary: rgba(0, 0, 0, 0.45);
+}
+
+body {
+  background: #f5f7fa !important;
+}
+
+/* 基础玻璃卡片 */
+.glass-card {
+  background: var(--glass-bg-card) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  -webkit-backdrop-filter: var(--glass-blur) !important;
+  border: var(--glass-border) !important;
+  border-radius: var(--glass-radius) !important;
+  box-shadow: var(--glass-shadow) !important;
+  color: var(--glass-text) !important;
+}
+
+.glass-card-heavy {
+  background: var(--glass-bg-card) !important;
+  backdrop-filter: var(--glass-blur-strong) !important;
+  -webkit-backdrop-filter: var(--glass-blur-strong) !important;
+  border: var(--glass-border) !important;
+  border-radius: var(--glass-radius) !important;
+  box-shadow: var(--glass-shadow-elevated) !important;
+}
