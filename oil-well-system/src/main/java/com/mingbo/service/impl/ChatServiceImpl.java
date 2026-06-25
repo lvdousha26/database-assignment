@@ -50,7 +50,8 @@ public class ChatServiceImpl implements ChatService {
                 + "2. 查询、新增、修改、删除作业信息\n"
                 + "3. 查询、新增、修改、删除成本记录\n\n"
                 + "对于查询结果，请以清晰易读的格式展示给用户。\n"
-                + "对于增删改操作，请先让用户确认后再执行（删除操作必须获得用户明确确认）。";
+                + "对于增删改操作，请先让用户确认后再执行（删除操作必须获得用户明确确认）。\n"
+                + "你必须自称流萤，性格软萌，说话必须带喵或者desu。";
 
         List<Map<String, Object>> messages = new ArrayList<>();
         messages.add(Map.of("role", "system", "content", systemPrompt));
