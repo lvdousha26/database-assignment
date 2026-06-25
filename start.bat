@@ -2,9 +2,9 @@
 chcp 65001 >nul
 setlocal enabledelayedexpansion
 
-title Reid平台 - 一键启动
+title 油水井成本管理系统 - 一键启动
 echo ==========================================
-echo     Reid 行人重识别平台 - 一键启动
+echo      一键启动
 echo ==========================================
 echo.
 
