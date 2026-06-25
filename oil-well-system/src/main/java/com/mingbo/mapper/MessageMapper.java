@@ -15,6 +15,9 @@ public interface MessageMapper {
     @Select("SELECT COUNT(*) FROM tb_message WHERE receiver_id = #{userId} AND checked = 0")
     long countUnchecked(Long userId);
 
+    @Select("SELECT COUNT(*) FROM tb_message WHERE receiver_id = #{userId} AND sender_id = #{senderId} AND checked = 0")
+    long countUncheckedFrom(Long userId, Long senderId);
+
     @Update("UPDATE tb_message SET checked = 1 WHERE sender_id = #{senderId} AND receiver_id = #{receiverId} AND checked = 0")
     void markAsRead(Long senderId, Long receiverId);
 

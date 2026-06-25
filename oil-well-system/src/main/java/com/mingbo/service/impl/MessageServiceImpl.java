@@ -61,7 +61,7 @@ public class MessageServiceImpl implements MessageService {
             if (user == null) continue;
 
             List<Message> lastMsgs = messageMapper.getConversation(userId, contactId, 0, 1);
-            long unread = messageMapper.countUnchecked(contactId);
+            long unread = messageMapper.countUncheckedFrom(userId, contactId);
 
             Map<String, Object> conv = new LinkedHashMap<>();
             conv.put("contactId", contactId);
