@@ -1,6 +1,6 @@
 <script setup>
 import {
-  DataAnalysis, Platform, Tools, Money, ChatDotSquare, User
+  DataAnalysis, Platform, Tools, Money, ChatDotSquare, User, Message
 } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 import { useRoute } from "vue-router";
@@ -9,7 +9,7 @@ const router = useRouter();
 const route = useRoute();
 
 const iconMap = {
-  DataAnalysis, Platform, Tools, Money, ChatDotSquare, User
+  DataAnalysis, Platform, Tools, Money, ChatDotSquare, User, Message
 };
 
 const menuItems = [
@@ -18,6 +18,7 @@ const menuItems = [
   { name: '作业管理', path: '/admin/operation', icon: 'Tools' },
   { name: '成本管理', path: '/admin/cost', icon: 'Money' },
   { name: 'AI 助手', path: '/admin/ai', icon: 'ChatDotSquare' },
+  { name: '消息', path: '/admin/message', icon: 'Message' },
   { name: '个人主页', path: '/admin/profile', icon: 'User' },
 ]
 </script>

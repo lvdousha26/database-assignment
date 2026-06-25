@@ -99,6 +99,20 @@ CREATE TABLE tb_cost (
   finaldate DATE COMMENT '入账/终审日期'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='成本总表';
 
+-- 消息表（用户对用户、用户对管理员私信）
+DROP TABLE IF EXISTS tb_message;
+CREATE TABLE tb_message (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  sender_id BIGINT NOT NULL COMMENT '发送者ID',
+  receiver_id BIGINT NOT NULL COMMENT '接收者ID',
+  message TEXT NOT NULL COMMENT '消息内容',
+  checked TINYINT DEFAULT 0 COMMENT '是否已读 0:未读 1:已读',
+  sent_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '发送时间',
+  INDEX idx_sender (sender_id),
+  INDEX idx_receiver (receiver_id),
+  INDEX idx_conv (sender_id, receiver_id, sent_time)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='消息表';
+
 -- 用户动态表
 DROP TABLE IF EXISTS tb_dynamic;
 CREATE TABLE tb_dynamic (

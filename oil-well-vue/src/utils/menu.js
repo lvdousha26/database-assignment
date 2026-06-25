@@ -3,6 +3,7 @@ const adminMenu = [
   { name: '油水井管理', path: '/admin/well', icon: 'Platform' },
   { name: '作业管理', path: '/admin/operation', icon: 'Tools' },
   { name: '成本管理', path: '/admin/cost', icon: 'Money' },
+  { name: '消息', path: '/admin/message', icon: 'Message' },
 ]
 
 export default adminMenu
