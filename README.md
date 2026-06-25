@@ -1,6 +1,6 @@
 # 采油厂油水井作业成本管理系统
 
-基于 B/S (Browser/Server) 架构的采油厂油水井作业成本管理平台，涵盖油水井信息管理、作业成本核算、成本分析预测、消息系统、权限控制等功能。
+基于 B/S (Browser/Server) 架构的采油厂油水井作业成本管理平台，涵盖油水井信息管理、作业成本核算、成本分析预测、AI 智能问答、站内消息、个人主页与动态、权限控制等功能。
 
 ## 技术栈
 
@@ -8,13 +8,13 @@
 |------|------|
 | 后端框架 | Spring Boot 3 + Java 17 |
 | 数据库访问 | Spring Data JPA + MyBatis 混合模式（MyBatis @Select/@Insert/@Update/@Delete 注解） |
-| 数据库 | MySQL 8.0 |
+| 数据库 | MySQL 8.0+ |
 | 缓存 | Redis 7（Spring Cache AOP） |
 | 前端框架 | Vue 3 + Vite |
 | UI 组件 | Element Plus |
 | 图表 | ECharts |
 | 状态管理 | Pinia |
-| AI 集成 | NVIDIA Nemotron（成本分析预测） |
+| AI 集成 | DeepSeek（成本分析预测与智能问答） |
 
 ## 部署架构
 
@@ -46,9 +46,10 @@ MySQL 8.0 (数据库) + Redis 7 (缓存)
 
 - 油水井管理：油井/水井基础信息管理
 - 作业成本核算：作业成本录入、核算、审批
-- 成本分析：基于 NVIDIA Nemotron 模型的成本预测分析
+- 成本分析：基于 DeepSeek 大模型的成本预测与智能问答分析
 - 可视化大屏：ECharts 仪表盘展示关键指标
-- 消息系统：消息发送与通知
+- 站内消息：用户对用户、用户对管理员的私信聊天，含未读红点提醒
+- 个人主页：用户信息编辑、头像/背景图上传、动态发布与管理
 - 权限管理：用户角色权限控制
 - 操作日志：AOP 切面记录所有关键操作
 
@@ -132,8 +133,8 @@ npm run dev
 
 打开浏览器访问 `http://localhost:8082`
 
-- 管理员登录：选择角色「管理员」，用户名 `admin`，密码 `123`
-- 用户登录：选择角色「用户」，用户名 `zhangsan`，密码 `123`
+- 管理员登录：用户名 `admin`，密码 `admin123`
+- 用户登录：用户名 `user1`，密码 `user123`
 
 ---
 
@@ -254,7 +255,7 @@ docker run -d -p 80:80 --name cost-frontend oil-well-cost-frontend
 ├── cloudflare-worker/                     # Cloudflare Worker 转发代理
 │   └── worker.js
 ├── start.bat                              # Windows 一键启动脚本
-├── schema.sql                             # 数据库初始化脚本
+├── schema.sql                             # 数据库初始化脚本（含 tb_message、tb_dynamic）
 ├── docker-compose.yml                     # Docker Compose 配置
 ├── railway.toml                           # Railway 部署配置
 └── README.md                              # 本文档
