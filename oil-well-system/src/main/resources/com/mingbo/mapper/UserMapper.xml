@@ -31,11 +31,14 @@
             <if test="gender != null and gender != ''">
                 gender = #{gender},
             </if>
-            <if test="addr != null and addr != ''">
-                addr = #{addr},
-            </if>
             <if test="avatar != null and avatar != ''">
                 avatar = #{avatar},
+            </if>
+            <if test="background != null and background != ''">
+                `background` = #{background},
+            </if>
+            <if test="bio != null">
+                bio = #{bio},
             </if>
             <if test="status != null">
                 status = #{status},
@@ -60,11 +63,14 @@
             <if test="gender != null and gender != ''">
                 gender = #{gender},
             </if>
-            <if test="addr != null and addr != ''">
-                addr = #{addr},
-            </if>
             <if test="avatar != null and avatar != ''">
                 avatar = #{avatar},
+            </if>
+            <if test="background != null and background != ''">
+                `background` = #{background},
+            </if>
+            <if test="bio != null">
+                bio = #{bio},
             </if>
             <if test="status != null">
                 status = #{status},
@@ -77,7 +83,11 @@
 
     </update>
 
-    <update id="updatePassqwordByUsername">
+    <update id="updateUsername">
+        update tb_user set username = #{newUsername} where username = #{oldUsername}
+    </update>
+
+    <update id="updatePasswordByUsername">
         update tb_user
         <set>
             <if test="username != null and username != ''">
@@ -103,9 +113,6 @@
             <if test="gender != null">
                 gender,
             </if>
-            <if test="addr != null and addr != ''">
-                addr,
-            </if>
             <if test="avatar != null and avatar != ''">
                 avatar,
             </if>
@@ -126,9 +133,6 @@
             <if test="gender != null">
                 #{gender},
             </if>
-            <if test="addr != null and addr != ''">
-                #{addr},
-            </if>
             <if test="avatar != null and avatar != ''">
                 #{avatar},
             </if>
@@ -145,6 +149,9 @@
         <foreach collection="ids" item="id" open="(" separator="," close=")">
             #{id}
         </foreach>
+    </delete>
+    <delete id="deleteById">
+        delete from tb_user where id = #{id}
     </delete>
     <select id="pageQueryByUsername" resultType="com.mingbo.pojo.User">
         select * from tb_user

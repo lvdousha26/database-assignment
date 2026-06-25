@@ -1,10 +1,10 @@
-package com.oilwell.service.impl;
+package com.mingbo.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.oilwell.pojo.*;
-import com.oilwell.service.*;
+import com.mingbo.pojo.*;
+import com.mingbo.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 

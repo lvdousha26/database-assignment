@@ -1,8 +1,8 @@
-package com.oilwell.controller;
+package com.mingbo.controller;
 
-import com.oilwell.pojo.CostCategory;
-import com.oilwell.pojo.Result;
-import com.oilwell.service.CostCategoryService;
+import com.mingbo.pojo.CostCategory;
+import com.mingbo.pojo.Result;
+import com.mingbo.service.CostCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,4 +1,4 @@
-package com.oilwell.pojo;
+package com.mingbo.pojo;
 
 import java.util.List;
 

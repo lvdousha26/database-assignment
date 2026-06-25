@@ -1,13 +1,13 @@
-package com.oilwell.controller;
+package com.mingbo.controller;
 
-import com.oilwell.pojo.ChatRequest;
-import com.oilwell.pojo.Result;
-import com.oilwell.service.ChatService;
+import com.mingbo.pojo.ChatRequest;
+import com.mingbo.pojo.Result;
+import com.mingbo.service.ChatService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/nvidia")
+@RequestMapping("/api/ai")
 public class NvidiaAIController {
 
     private final ChatService chatService;

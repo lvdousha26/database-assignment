@@ -1,8 +1,13 @@
 <script setup>
-import { ref, nextTick } from 'vue'
+import { ref, computed, nextTick } from 'vue'
 import { sendChat } from '@/api/ai'
-import { ElMessage } from 'element-plus'
-import { Promotion } from '@element-plus/icons-vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { Promotion, Setting } from '@element-plus/icons-vue'
+import { useUserStore } from '@/stores'
+
+const userStore = useUserStore()
+const userAvatar = computed(() => userStore.user?.avatar || '')
+const aiAvatar = '/assets/ai头像.jpg'
 
 const messages = ref([
   { role: 'assistant', content: '你好！我是采油厂成本管理助手，可以帮你分析油水井作业成本数据、解答相关问题。请问有什么可以帮你的？' }
@@ -10,12 +15,34 @@ const messages = ref([
 const inputText = ref('')
 const loading = ref(false)
 const chatListRef = ref(null)
+const apiKeyDialog = ref(false)
+const apiKeyInput = ref(localStorage.getItem('ai_api_key') || '')
 
 const scrollToBottom = async () => {
   await nextTick()
   if (chatListRef.value) {
     chatListRef.value.scrollTop = chatListRef.value.scrollHeight
   }
+}
+
+const openApiKeyDialog = () => {
+  apiKeyInput.value = localStorage.getItem('ai_api_key') || ''
+  apiKeyDialog.value = true
+}
+
+const saveApiKey = () => {
+  const key = apiKeyInput.value.trim()
+  if (key) {
+    localStorage.setItem('ai_api_key', key)
+  } else {
+    localStorage.removeItem('ai_api_key')
+  }
+  apiKeyDialog.value = false
+  ElMessage.success('API Key 已保存')
+}
+
+const getApiKey = () => {
+  return localStorage.getItem('ai_api_key') || ''
 }
 
 const handleSend = async () => {
@@ -28,7 +55,10 @@ const handleSend = async () => {
   await scrollToBottom()
 
   try {
-    const res = await sendChat({ message: text })
+    const params = { message: text }
+    const key = getApiKey()
+    if (key) params.apiKey = key
+    const res = await sendChat(params)
     if (res.data.code === '1') {
       messages.value.push({ role: 'assistant', content: res.data.data })
     } else {
@@ -57,6 +87,9 @@ const handleKeydown = (e) => {
         <div class="chat-header">
           <span class="chat-title">AI 智能助手</span>
           <el-tag type="info" size="small">采油厂成本管理</el-tag>
+          <el-button text size="small" class="api-key-btn" :icon="Setting" @click="openApiKeyDialog">
+            API Key
+          </el-button>
         </div>
       </template>
 
@@ -68,7 +101,9 @@ const handleKeydown = (e) => {
           :class="msg.role === 'user' ? 'user-row' : 'assistant-row'"
         >
           <div class="avatar" :class="msg.role">
-            {{ msg.role === 'user' ? 'U' : 'AI' }}
+            <img v-if="msg.role === 'user' && userAvatar" :src="userAvatar" class="avatar-img" />
+            <img v-else-if="msg.role === 'assistant'" :src="aiAvatar" class="avatar-img" />
+            <span v-else>{{ msg.role === 'user' ? 'U' : 'AI' }}</span>
           </div>
           <div class="message-bubble" :class="msg.role">
             <div class="message-content">{{ msg.content }}</div>
@@ -76,7 +111,9 @@ const handleKeydown = (e) => {
         </div>
 
         <div v-if="loading" class="message-row assistant-row">
-          <div class="avatar assistant">AI</div>
+          <div class="avatar assistant">
+            <img :src="aiAvatar" class="avatar-img" />
+          </div>
           <div class="message-bubble assistant">
             <div class="typing-indicator">
               <span></span><span></span><span></span>
@@ -104,6 +141,19 @@ const handleKeydown = (e) => {
           发送
         </el-button>
       </div>
+
+      <!-- API Key 设置 -->
+      <el-dialog v-model="apiKeyDialog" title="设置 API Key" width="420px" :close-on-click-modal="false">
+        <el-form label-position="top">
+          <el-form-item label="DeepSeek API Key">
+            <el-input v-model="apiKeyInput" type="password" placeholder="sk-..." show-password />
+          </el-form-item>
+        </el-form>
+        <template #footer>
+          <el-button @click="apiKeyDialog = false">取消</el-button>
+          <el-button type="primary" @click="saveApiKey">保存</el-button>
+        </template>
+      </el-dialog>
     </el-card>
   </div>
 </template>
@@ -179,6 +229,13 @@ const handleKeydown = (e) => {
   font-size: 13px;
   font-weight: 600;
   flex-shrink: 0;
+}
+
+.avatar-img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .avatar.user {
@@ -261,5 +318,9 @@ const handleKeydown = (e) => {
 .send-btn {
   height: 56px;
   flex-shrink: 0;
+}
+
+.api-key-btn {
+  margin-left: auto;
 }
 </style>

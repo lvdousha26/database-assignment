@@ -1,6 +1,6 @@
-package com.oilwell.mapper;
+package com.mingbo.mapper;
 
-import com.oilwell.pojo.CostDetail;
+import com.mingbo.pojo.CostDetail;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;

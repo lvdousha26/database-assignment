@@ -1,4 +1,4 @@
-package com.oilwell.util;
+package com.mingbo.util;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;

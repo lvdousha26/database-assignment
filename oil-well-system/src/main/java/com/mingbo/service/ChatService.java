@@ -1,6 +1,6 @@
-package com.oilwell.service;
+package com.mingbo.service;
 
-import com.oilwell.pojo.ChatRequest;
+import com.mingbo.pojo.ChatRequest;
 
 public interface ChatService {
     ChatResponse chat(ChatRequest request);

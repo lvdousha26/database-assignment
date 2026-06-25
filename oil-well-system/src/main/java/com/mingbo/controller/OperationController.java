@@ -1,10 +1,10 @@
-package com.oilwell.controller;
+package com.mingbo.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.oilwell.pojo.Operation;
-import com.oilwell.pojo.Result;
-import com.oilwell.service.OperationService;
+import com.mingbo.pojo.Operation;
+import com.mingbo.pojo.Result;
+import com.mingbo.service.OperationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

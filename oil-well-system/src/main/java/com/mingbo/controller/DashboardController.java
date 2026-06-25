@@ -1,9 +1,9 @@
-package com.oilwell.controller;
+package com.mingbo.controller;
 
-import com.oilwell.mapper.CostDetailMapper;
-import com.oilwell.mapper.OperationMapper;
-import com.oilwell.mapper.WellMapper;
-import com.oilwell.pojo.Result;
+import com.mingbo.mapper.CostDetailMapper;
+import com.mingbo.mapper.OperationMapper;
+import com.mingbo.mapper.WellMapper;
+import com.mingbo.pojo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -11,7 +11,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${MYSQL_URL:jdbc:mysql://localhost:3306/tb_oil_well_cost?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=UTF-8}
     username: ${MYSQL_USER:root}
-    password: ${MYSQL_PASSWORD:123456}
+    password: ${MYSQL_PASSWORD:}
     hikari:
       initialization-fail-timeout: -1
   servlet:
@@ -37,8 +37,14 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true
 
-nvidia:
+authority:
+  request:
+    message: "用户 %USER%(ID:%ID%) 请求获取管理员权限"
+  response:
+    accept: "管理员 %USER%(ID:%ID%) 已接受您的权限申请"
+
+deepseek:
   api:
-    url: ${NVIDIA_API_URL:https://api.stepfun.com/v1}
-    key: ${NVIDIA_API_KEY:}
-  model: ${NVIDIA_MODEL:step-3.5-flash}
+    url: ${DEEPSEEK_API_URL:https://api.deepseek.com}
+    key: ${DEEPSEEK_API_KEY:}
+  model: ${DEEPSEEK_MODEL:deepseek-chat}

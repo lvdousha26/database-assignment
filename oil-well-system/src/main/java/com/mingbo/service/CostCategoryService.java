@@ -1,6 +1,6 @@
-package com.oilwell.service;
+package com.mingbo.service;
 
-import com.oilwell.pojo.CostCategory;
+import com.mingbo.pojo.CostCategory;
 
 import java.util.List;
 

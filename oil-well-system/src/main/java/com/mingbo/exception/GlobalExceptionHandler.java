@@ -1,6 +1,6 @@
-package com.oilwell.exception;
+package com.mingbo.exception;
 
-import com.oilwell.pojo.Result;
+import com.mingbo.pojo.Result;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 

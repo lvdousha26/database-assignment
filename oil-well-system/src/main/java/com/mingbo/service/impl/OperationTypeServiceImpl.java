@@ -1,8 +1,8 @@
-package com.oilwell.service.impl;
+package com.mingbo.service.impl;
 
-import com.oilwell.mapper.OperationTypeMapper;
-import com.oilwell.pojo.OperationType;
-import com.oilwell.service.OperationTypeService;
+import com.mingbo.mapper.OperationTypeMapper;
+import com.mingbo.pojo.OperationType;
+import com.mingbo.service.OperationTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,9 +1,9 @@
-package com.oilwell.interceptor;
+package com.mingbo.interceptor;
 
 import com.alibaba.fastjson.JSONObject;
-import com.oilwell.pojo.Result;
-import com.oilwell.service.RedisService;
-import com.oilwell.util.JwtUtils;
+import com.mingbo.pojo.Result;
+import com.mingbo.service.RedisService;
+import com.mingbo.util.JwtUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;

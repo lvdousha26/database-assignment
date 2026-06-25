@@ -1,6 +1,6 @@
-package com.oilwell.service;
+package com.mingbo.service;
 
-import com.oilwell.pojo.Well;
+import com.mingbo.pojo.Well;
 
 import java.util.List;
 

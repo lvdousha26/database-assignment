@@ -14,6 +14,8 @@ CREATE TABLE tb_user (
   gender VARCHAR(10) DEFAULT '男',
   phone VARCHAR(20),
   avatar VARCHAR(500),
+  background VARCHAR(500),
+  bio VARCHAR(200) DEFAULT '' COMMENT '个人简介',
   status INT DEFAULT 1 COMMENT '1:启用 0:禁用',
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -94,6 +96,18 @@ CREATE TABLE tb_cost_detail (
   FOREIGN KEY (operation_id) REFERENCES tb_operation(id) ON DELETE CASCADE,
   FOREIGN KEY (category_id) REFERENCES tb_cost_category(id)
 );
+
+-- 用户动态表
+DROP TABLE IF EXISTS tb_dynamic;
+CREATE TABLE tb_dynamic (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  user_id BIGINT NOT NULL COMMENT '用户ID',
+  content TEXT NOT NULL COMMENT '动态内容',
+  images VARCHAR(2000) COMMENT '图片路径,逗号分隔',
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX idx_user_id (user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户动态表';
 
 -- 插入默认数据
 

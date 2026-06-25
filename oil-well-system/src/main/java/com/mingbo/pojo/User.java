@@ -1,4 +1,4 @@
-package com.oilwell.pojo;
+package com.mingbo.pojo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,6 +19,8 @@ public class User {
     private String gender;
     private String phone;
     private String avatar;
+    private String background;
+    private String bio;
     private Integer status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

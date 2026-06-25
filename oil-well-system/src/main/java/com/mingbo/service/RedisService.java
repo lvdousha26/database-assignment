@@ -1,4 +1,4 @@
-package com.oilwell.service;
+package com.mingbo.service;
 
 import java.util.Set;
 import java.util.concurrent.TimeUnit;

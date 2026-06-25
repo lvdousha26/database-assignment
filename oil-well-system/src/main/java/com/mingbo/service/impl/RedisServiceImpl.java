@@ -1,6 +1,6 @@
-package com.oilwell.service.impl;
+package com.mingbo.service.impl;
 
-import com.oilwell.service.RedisService;
+import com.mingbo.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.core.RedisTemplate;

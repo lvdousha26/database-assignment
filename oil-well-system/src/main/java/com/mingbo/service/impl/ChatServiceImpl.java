@@ -1,8 +1,8 @@
-package com.oilwell.service.impl;
+package com.mingbo.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.oilwell.pojo.ChatRequest;
-import com.oilwell.service.ChatService;
+import com.mingbo.pojo.ChatRequest;
+import com.mingbo.service.ChatService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -26,13 +26,13 @@ public class ChatServiceImpl implements ChatService {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final ToolExecutor toolExecutor;
 
-    @Value("${nvidia.api.url}")
+    @Value("${deepseek.api.url}")
     private String apiUrl;
 
-    @Value("${nvidia.api.key}")
+    @Value("${deepseek.api.key}")
     private String apiKey;
 
-    @Value("${nvidia.model}")
+    @Value("${deepseek.model}")
     private String model;
 
     public ChatServiceImpl(ToolExecutor toolExecutor) {
@@ -62,7 +62,9 @@ public class ChatServiceImpl implements ChatService {
             for (int i = 0; i < MAX_ITERATIONS; i++) {
                 HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.APPLICATION_JSON);
-                headers.setBearerAuth(apiKey);
+                String key = (request.getApiKey() != null && !request.getApiKey().isEmpty())
+                        ? request.getApiKey() : apiKey;
+                headers.setBearerAuth(key);
 
                 Map<String, Object> body = Map.of(
                         "model", model,

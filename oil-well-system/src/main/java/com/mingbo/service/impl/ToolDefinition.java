@@ -1,4 +1,4 @@
-package com.oilwell.service.impl;
+package com.mingbo.service.impl;
 
 import java.util.LinkedHashMap;
 import java.util.List;

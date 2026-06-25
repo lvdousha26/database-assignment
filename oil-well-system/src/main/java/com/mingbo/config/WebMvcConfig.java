@@ -1,6 +1,6 @@
-package com.oilwell.config;
+package com.mingbo.config;
 
-import com.oilwell.interceptor.LoginCheckInterceptor;
+import com.mingbo.interceptor.LoginCheckInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -21,7 +21,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loginCheckInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/user/**", "/api/nvidia/**", "/api/dashboard/health", "/uploads/**", "/static/**");
+                .excludePathPatterns("/user/**", "/api/ai/**", "/api/dashboard/health", "/uploads/**", "/static/**", "/assets/**");
     }
 
     @Override
@@ -40,5 +40,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
         registry.addResourceHandler("/uploads/**")
                 .addResourceLocations("file:" + absolutePath + "/");
+
+        String assetsDir = "assets/";
+        Path assetsPath = Paths.get(assetsDir);
+        String assetsAbsolutePath = assetsPath.toAbsolutePath().toString();
+
+        registry.addResourceHandler("/assets/**")
+                .addResourceLocations("file:" + assetsAbsolutePath + "/");
     }
 }

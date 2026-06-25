@@ -1,8 +1,8 @@
-package com.oilwell.controller;
+package com.mingbo.controller;
 
-import com.oilwell.pojo.OperationType;
-import com.oilwell.pojo.Result;
-import com.oilwell.service.OperationTypeService;
+import com.mingbo.pojo.OperationType;
+import com.mingbo.pojo.Result;
+import com.mingbo.service.OperationTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

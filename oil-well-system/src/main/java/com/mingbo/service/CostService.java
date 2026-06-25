@@ -1,6 +1,6 @@
-package com.oilwell.service;
+package com.mingbo.service;
 
-import com.oilwell.pojo.CostDetail;
+import com.mingbo.pojo.CostDetail;
 
 import java.util.List;
 import java.util.Map;

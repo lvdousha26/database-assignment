@@ -1,4 +1,4 @@
-package com.oilwell.pojo;
+package com.mingbo.pojo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -483,13 +483,13 @@ onMounted(() => {
   position: relative;
   width: 100%;
   max-width: 450px;
-  background: var(--glass-bg-heavy);
-  backdrop-filter: var(--glass-blur-strong);
-  -webkit-backdrop-filter: var(--glass-blur-strong);
-  border: var(--glass-border);
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 24px;
   padding: 25px 25px;
-  box-shadow: var(--glass-shadow-elevated);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   z-index: 10;
   overflow: hidden;
   transform: translateY(0);
@@ -498,7 +498,7 @@ onMounted(() => {
 
 .login-card:hover {
   transform: translateY(-10px);
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.4);
 }
 
 .login-card::before {
@@ -605,26 +605,26 @@ input, select {
   width: 100%;
   height: 56px;
   padding: 0 20px 0 52px;
-  border: var(--glass-border);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 14px;
   font-size: 17px;
   transition: all 0.3s;
   outline: none;
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur-light);
-  -webkit-backdrop-filter: var(--glass-blur-light);
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   color: #fff;
   font-weight: 500;
 }
 
 select option {
-  background: #1e1c3a;
+  background: rgba(50, 50, 80, 0.95);
   color: #fff;
 }
 
 input:focus, select:focus {
-  border-color: rgba(255, 255, 255, 0.4);
-  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.12);
 }
 
 input::placeholder {
@@ -704,17 +704,17 @@ input::placeholder {
   font-weight: 600;
   letter-spacing: 1px;
   border-radius: 14px;
-  background: var(--glass-bg);
+  background: rgba(255, 255, 255, 0.12);
   color: #fff;
-  border: var(--glass-border);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   cursor: pointer;
   transition: all 0.3s;
-  backdrop-filter: var(--glass-blur-light);
+  backdrop-filter: blur(8px);
 }
 
 .reset-btn:hover {
-  background: var(--glass-bg-medium);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.35);
   transform: translateY(-5px);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }

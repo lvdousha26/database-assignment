@@ -26,7 +26,13 @@ export default defineConfig({
     },
   },
   server: {
-    port: 8082
+    port: 8082,
+    proxy: {
+      '/assets': {
+        target: 'http://localhost:8080',
+        changeOrigin: true
+      }
+    }
   },
   build: {
     rollupOptions: {

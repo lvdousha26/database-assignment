@@ -146,7 +146,7 @@ import BrandAside from "@/components/BrandAside.vue";
 }
 
 .content-area:deep(.el-select-dropdown) {
-  background: rgba(30, 28, 50, 0.95) !important;
+  background: var(--glass-bg-card) !important;
   backdrop-filter: var(--glass-blur-strong) !important;
   border: var(--glass-border) !important;
 }
@@ -159,9 +159,9 @@ import BrandAside from "@/components/BrandAside.vue";
   background: var(--glass-bg-medium) !important;
 }
 
-/* 对话框毛玻璃 */
+/* 对话框 - 浅色 */
 .content-area:deep(.el-dialog) {
-  background: rgba(30, 28, 50, 0.95) !important;
+  background: var(--glass-bg-card) !important;
   backdrop-filter: var(--glass-blur-strong) !important;
   border: var(--glass-border) !important;
   border-radius: var(--glass-radius-lg) !important;

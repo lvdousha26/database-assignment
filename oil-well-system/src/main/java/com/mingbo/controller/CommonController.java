@@ -1,6 +1,6 @@
-package com.oilwell.controller;
+package com.mingbo.controller;
 
-import com.oilwell.pojo.Result;
+import com.mingbo.pojo.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

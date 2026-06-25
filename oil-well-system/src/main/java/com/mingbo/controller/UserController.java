@@ -1,9 +1,9 @@
-package com.oilwell.controller;
+package com.mingbo.controller;
 
-import com.oilwell.pojo.Result;
-import com.oilwell.pojo.User;
-import com.oilwell.service.UserService;
-import com.oilwell.util.JwtUtils;
+import com.mingbo.pojo.Result;
+import com.mingbo.pojo.User;
+import com.mingbo.service.UserService;
+import com.mingbo.util.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
