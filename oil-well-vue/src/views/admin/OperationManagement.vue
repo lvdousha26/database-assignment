@@ -58,7 +58,7 @@ const loadOptions = async () => {
       wellOptions.value = wellRes.data.data.rows || wellRes.data.data.list || []
     }
     if (typeRes.data.code === '1') {
-      operationTypeOptions.value = typeRes.data.data.rows || typeRes.data.data.list || []
+      operationTypeOptions.value = typeRes.data.data.rows || typeRes.data.data.list || typeRes.data.data || []
     }
   } catch (e) {
     // 静默处理

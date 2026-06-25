@@ -4,6 +4,8 @@ import com.mingbo.pojo.PasswordDTO;
 import com.mingbo.pojo.User;
 import org.apache.ibatis.annotations.*;
 
+import java.util.List;
+
 @Mapper
 public interface UserMapper {
 
@@ -29,4 +31,13 @@ public interface UserMapper {
     void deleteBatchIds(@Param("ids") Long[] ids);
 
     void deleteById(Long id);
+
+    @Select("select * from tb_user order by id asc")
+    List<User> listAll();
+
+    @Update("update tb_user set role = #{role} where id = #{id}")
+    void updateRole(Long id, String role);
+
+    @Update("update tb_user set status = #{status} where id = #{id}")
+    void updateStatus(Long id, Integer status);
 }

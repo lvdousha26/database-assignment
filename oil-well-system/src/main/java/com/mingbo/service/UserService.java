@@ -3,6 +3,8 @@ package com.mingbo.service;
 import com.mingbo.pojo.PasswordDTO;
 import com.mingbo.pojo.User;
 
+import java.util.List;
+
 public interface UserService {
 
     User getByUsernameAndPassword(String username, String password);
@@ -24,4 +26,10 @@ public interface UserService {
     void deleteByIds(Long[] ids);
 
     void deleteById(Long id);
+
+    List<User> listAll();
+
+    void updateRole(Long id, String role);
+
+    void updateStatus(Long id, Integer status);
 }

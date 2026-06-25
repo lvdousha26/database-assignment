@@ -1,15 +1,17 @@
 <script setup>
 import {
-  DataAnalysis, Platform, Tools, Money, ChatDotSquare, User, Message
+  DataAnalysis, Platform, Tools, Money, ChatDotSquare, User, Message, UserFilled
 } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 import { useRoute } from "vue-router";
+import { useUserStore } from "@/stores";
 
 const router = useRouter();
 const route = useRoute();
+const userStore = useUserStore();
 
 const iconMap = {
-  DataAnalysis, Platform, Tools, Money, ChatDotSquare, User, Message
+  DataAnalysis, Platform, Tools, Money, ChatDotSquare, User, Message, UserFilled
 };
 
 const menuItems = [
@@ -19,6 +21,7 @@ const menuItems = [
   { name: '成本管理', path: '/admin/cost', icon: 'Money' },
   { name: 'AI 助手', path: '/admin/ai', icon: 'ChatDotSquare' },
   { name: '消息', path: '/admin/message', icon: 'Message' },
+  { name: '用户管理', path: '/admin/users', icon: 'UserFilled', adminOnly: true },
   { name: '个人主页', path: '/admin/profile', icon: 'User' },
 ]
 </script>
@@ -33,7 +36,7 @@ const menuItems = [
       router
     >
       <el-menu-item
-        v-for="item in menuItems"
+        v-for="item in menuItems.filter(m => !m.adminOnly || userStore.user?.role === '管理员')"
         :key="item.path"
         :index="item.path"
       >

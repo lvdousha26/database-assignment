@@ -36,6 +36,10 @@ const router = createRouter({
         {
           path: '/admin/message',
           component: () => import('@/views/admin/MessageManagement.vue')
+        },
+        {
+          path: '/admin/users',
+          component: () => import('@/views/admin/UserManagement.vue')
         }
       ]
     },

@@ -19,3 +19,12 @@ export const updateUsernameService = (data) =>
 
 export const updateUserInfoService = (data) =>
   request.put('/personal/profile', data)
+
+export const userListService = () =>
+  request.get('/user/list')
+
+export const userUpdateRoleService = (id, role) =>
+  request.put(`/user/${id}/role`, { role })
+
+export const userUpdateStatusService = (id, status) =>
+  request.put(`/user/${id}/status`, { status })

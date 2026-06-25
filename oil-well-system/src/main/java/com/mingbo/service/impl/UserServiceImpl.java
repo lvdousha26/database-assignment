@@ -7,6 +7,8 @@ import com.mingbo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -61,5 +63,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteById(Long id) {
         userMapper.deleteById(id);
+    }
+
+    @Override
+    public List<User> listAll() {
+        return userMapper.listAll();
+    }
+
+    @Override
+    public void updateRole(Long id, String role) {
+        userMapper.updateRole(id, role);
+    }
+
+    @Override
+    public void updateStatus(Long id, Integer status) {
+        userMapper.updateStatus(id, status);
     }
 }
