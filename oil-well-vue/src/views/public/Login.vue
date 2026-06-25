@@ -478,18 +478,16 @@ onMounted(() => {
   75% { transform: translate(5px, -10px); }
 }
 
-/* 登录卡片 - 毛玻璃 */
+/* 登录卡片 - 白色 */
 .login-card {
   position: relative;
   width: 100%;
   max-width: 450px;
-  background: rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: #fff;
+  border: 1px solid #e8e8e8;
   border-radius: 24px;
   padding: 25px 25px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   z-index: 10;
   overflow: hidden;
   transform: translateY(0);
@@ -556,7 +554,7 @@ onMounted(() => {
 }
 
 .login-subtitle {
-  color: var(--glass-text-secondary);
+  color: #999;
   font-size: 20px;
   margin-bottom: 10px;
   letter-spacing: 1px;
@@ -581,7 +579,7 @@ onMounted(() => {
 .form-group label {
   display: block;
   margin-bottom: 10px;
-  color: #fff;
+  color: #333;
   font-weight: 600;
   font-size: 16px;
 }
@@ -595,40 +593,37 @@ onMounted(() => {
   left: 16px;
   top: 50%;
   transform: translateY(-50%);
-  color: rgba(255, 255, 255, 0.9);
+  color: #999;
   font-size: 22px;
   z-index: 2;
-  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.3));
 }
 
 input, select {
   width: 100%;
   height: 56px;
   padding: 0 20px 0 52px;
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  border: 1px solid #dcdfe6;
   border-radius: 14px;
   font-size: 17px;
   transition: all 0.3s;
   outline: none;
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  color: #fff;
+  background: #f5f7fa;
+  color: #333;
   font-weight: 500;
 }
 
 select option {
-  background: rgba(50, 50, 80, 0.95);
-  color: #fff;
+  background: #fff;
+  color: #333;
 }
 
 input:focus, select:focus {
-  border-color: rgba(255, 255, 255, 0.5);
-  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.12);
+  border-color: #409eff;
+  box-shadow: 0 0 0 4px rgba(64, 158, 255, 0.12);
 }
 
 input::placeholder {
-  color: rgba(255, 255, 255, 0.5);
+  color: #c0c4cc;
 }
 
 .role-selector {
@@ -704,19 +699,18 @@ input::placeholder {
   font-weight: 600;
   letter-spacing: 1px;
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: #f5f7fa;
+  color: #666;
+  border: 1px solid #dcdfe6;
   cursor: pointer;
   transition: all 0.3s;
-  backdrop-filter: blur(8px);
 }
 
 .reset-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.35);
+  background: #eef0f4;
+  border-color: #c0c4cc;
   transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
 /* 底部链接 */
@@ -746,10 +740,9 @@ input::placeholder {
   bottom: 30px;
   text-align: center;
   width: 100%;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.8);
   font-size: 16px;
   z-index: 10;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
   letter-spacing: 0.5px;
   font-weight: 500;
 }
