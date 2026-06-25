@@ -271,7 +271,7 @@ onMounted(() => {
           <template #default="{ row }">{{ formatMoney(row.settlecost) }}</template>
         </el-table-column>
         <el-table-column prop="settleunit" label="结算单位" width="120" />
-        <el-table-column label="操作" width="160" fixed="right">
+        <el-table-column label="操作" width="200" >
           <template #default="{ row }">
             <el-button text size="small" type="primary" :icon="Edit" @click="handleEdit(row)">编辑</el-button>
             <el-button text size="small" type="danger" :icon="Delete" @click="handleDelete(row.code)">删除</el-button>
@@ -297,7 +297,7 @@ onMounted(() => {
     <el-dialog
       v-model="dialogVisible"
       :title="isEdit ? '编辑成本' : '新增成本'"
-      width="800px"
+      width="90%"
       :close-on-click-modal="false"
     >
       <el-form ref="formRef" :model="form" :rules="formRules" label-width="120px" class="cost-form">
@@ -436,8 +436,7 @@ onMounted(() => {
 
 <style scoped>
 .cost-page {
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 100%;
 }
 
 .page-header {
