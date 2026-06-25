@@ -1,10 +1,8 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { getCostList, addCost, updateCost, deleteCost } from '@/api/cost'
-import { getOperationList } from '@/api/operation'
-import { getCostCategoryList } from '@/api/costCategory'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Search, Plus, Edit, Delete } from '@element-plus/icons-vue'
+import { Search, Plus, Edit, Delete, Expand, Fold } from '@element-plus/icons-vue'
 
 const tableData = ref([])
 const total = ref(0)
@@ -13,33 +11,45 @@ const dialogVisible = ref(false)
 const isEdit = ref(false)
 const formRef = ref(null)
 
-const operationOptions = ref([])
-const costCategoryOptions = ref([])
-
 const searchForm = ref({
-  operationId: '',
-  categoryId: ''
+  wellcode: '',
+  preunit: '',
+  content: ''
 })
 
 const form = ref({
-  id: null,
-  operationId: null,
-  categoryId: null,
-  itemName: '',
-  quantity: 1,
-  unitPrice: 0,
-  amount: 0,
-  costDate: '',
-  payee: ''
+  code: '',
+  preunit: '',
+  wellcode: '',
+  premoney: null,
+  person: '',
+  predate: '',
+  startdate: '',
+  finish: '',
+  settleunit: '',
+  content: '',
+  mat1Code: '', mat1Num: null, mat1Price: null, mat1Sub: null,
+  mat2Code: '', mat2Num: null, mat2Price: null, mat2Sub: null,
+  mat3Code: '', mat3Num: null, mat3Price: null, mat3Sub: null,
+  mat4Code: '', mat4Num: null, mat4Price: null, mat4Sub: null,
+  matcost: null,
+  humancost: null,
+  equipcost: null,
+  othercost: null,
+  settlecost: null,
+  settleperson: '',
+  settledate: '',
+  finalcost: null,
+  finalperson: '',
+  finaldate: ''
 })
 
 const formRules = {
-  operationId: [{ required: true, message: '请选择所属作业', trigger: 'change' }],
-  categoryId: [{ required: true, message: '请选择成本类别', trigger: 'change' }],
-  itemName: [{ required: true, message: '请输入费用项目', trigger: 'blur' }],
-  quantity: [{ required: true, message: '请输入数量', trigger: 'blur' }],
-  unitPrice: [{ required: true, message: '请输入单价', trigger: 'blur' }],
-  costDate: [{ required: true, message: '请选择日期', trigger: 'change' }]
+  code: [{ required: true, message: '请输入费用编号', trigger: 'blur' }],
+  preunit: [{ required: true, message: '请输入预算单位', trigger: 'blur' }],
+  wellcode: [{ required: true, message: '请输入井号', trigger: 'blur' }],
+  predate: [{ required: true, message: '请选择预算编制日期', trigger: 'change' }],
+  settleunit: [{ required: true, message: '请输入施工/结算单位', trigger: 'blur' }]
 }
 
 const pagination = ref({
@@ -47,32 +57,7 @@ const pagination = ref({
   pageSize: 10
 })
 
-// 金额自动计算
-const computedAmount = computed(() => {
-  return (form.value.quantity || 0) * (form.value.unitPrice || 0)
-})
-
-// 当数量或单价变化时更新金额
-const updateAmount = () => {
-  form.value.amount = computedAmount.value
-}
-
-const loadOptions = async () => {
-  try {
-    const [opRes, catRes] = await Promise.all([
-      getOperationList({ page: 1, pageSize: 9999 }),
-      getCostCategoryList({ page: 1, pageSize: 9999 })
-    ])
-    if (opRes.data.code === '1') {
-      operationOptions.value = opRes.data.data.rows || opRes.data.data.list || []
-    }
-    if (catRes.data.code === '1') {
-      costCategoryOptions.value = catRes.data.data.rows || catRes.data.data.list || []
-    }
-  } catch (e) {
-    // 静默处理
-  }
-}
+const expandedRows = ref([])
 
 const loadData = async () => {
   loading.value = true
@@ -82,15 +67,14 @@ const loadData = async () => {
       pageSize: pagination.value.pageSize,
       ...searchForm.value
     }
-    Object.keys(params).forEach(k => { if (!params[k]) delete params[k] })
-
+    if (!params.wellcode) delete params.wellcode
+    if (!params.preunit) delete params.preunit
+    if (!params.content) delete params.content
     const res = await getCostList(params)
-    if (res.data.code === '1') {
-      tableData.value = res.data.data.rows || res.data.data.list || []
-      total.value = res.data.data.total || 0
-    }
+    tableData.value = res.data.data.list || []
+    total.value = res.data.data.total || 0
   } catch (e) {
-    // 静默处理
+    console.error(e)
   } finally {
     loading.value = false
   }
@@ -102,61 +86,9 @@ const handleSearch = () => {
 }
 
 const handleReset = () => {
-  searchForm.value = { operationId: '', categoryId: '' }
-  handleSearch()
-}
-
-const handleAdd = () => {
-  isEdit.value = false
-  form.value = {
-    id: null, operationId: null, categoryId: null, itemName: '',
-    quantity: 1, unitPrice: 0, amount: 0, costDate: '', payee: ''
-  }
-  dialogVisible.value = true
-}
-
-const handleEdit = (row) => {
-  isEdit.value = true
-  form.value = {
-    ...row,
-    operationId: row.operationId || row.operation?.id,
-    categoryId: row.categoryId || row.category?.id
-  }
-  dialogVisible.value = true
-}
-
-const handleDelete = async (id) => {
-  try {
-    await ElMessageBox.confirm('确认删除该成本记录吗？', '提示', {
-      confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning'
-    })
-    const res = await deleteCost(id)
-    if (res.data.code === '1') {
-      ElMessage.success('删除成功')
-      loadData()
-    }
-  } catch (e) {
-    // cancel or error
-  }
-}
-
-const handleSave = async () => {
-  if (!formRef.value) return
-  await formRef.value.validate()
-  form.value.amount = computedAmount.value
-
-  let res
-  if (isEdit.value) {
-    res = await updateCost(form.value)
-  } else {
-    res = await addCost(form.value)
-  }
-
-  if (res.data.code === '1') {
-    ElMessage.success(isEdit.value ? '更新成功' : '新增成功')
-    dialogVisible.value = false
-    loadData()
-  }
+  searchForm.value = { wellcode: '', preunit: '', content: '' }
+  pagination.value.page = 1
+  loadData()
 }
 
 const handlePageChange = (page) => {
@@ -170,71 +102,193 @@ const handleSizeChange = (size) => {
   loadData()
 }
 
+const handleAdd = () => {
+  isEdit.value = false
+  form.value = {
+    code: '', preunit: '', wellcode: '', premoney: null, person: '', predate: '',
+    startdate: '', finish: '', settleunit: '', content: '',
+    mat1Code: '', mat1Num: null, mat1Price: null, mat1Sub: null,
+    mat2Code: '', mat2Num: null, mat2Price: null, mat2Sub: null,
+    mat3Code: '', mat3Num: null, mat3Price: null, mat3Sub: null,
+    mat4Code: '', mat4Num: null, mat4Price: null, mat4Sub: null,
+    matcost: null, humancost: null, equipcost: null, othercost: null,
+    settlecost: null, settleperson: '', settledate: '',
+    finalcost: null, finalperson: '', finaldate: ''
+  }
+  dialogVisible.value = true
+}
+
+const handleEdit = (row) => {
+  isEdit.value = true
+  form.value = { ...row }
+  dialogVisible.value = true
+}
+
+const handleDelete = (code) => {
+  ElMessageBox.confirm('确定要删除该成本记录吗？', '确认删除', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(async () => {
+    await deleteCost(code)
+    ElMessage.success('删除成功')
+    loadData()
+  }).catch(() => {})
+}
+
+const handleSave = async () => {
+  const valid = await formRef.value.validate().catch(() => false)
+  if (!valid) return
+  try {
+    if (isEdit.value) {
+      await updateCost(form.value)
+      ElMessage.success('更新成功')
+    } else {
+      await addCost(form.value)
+      ElMessage.success('新增成功')
+    }
+    dialogVisible.value = false
+    loadData()
+  } catch (e) {
+    // error handled by interceptor
+  }
+}
+
+const toggleExpand = (row) => {
+  const idx = expandedRows.value.indexOf(row.code)
+  if (idx > -1) {
+    expandedRows.value.splice(idx, 1)
+  } else {
+    expandedRows.value.push(row.code)
+  }
+}
+
+const formatMoney = (val) => {
+  if (val === null || val === undefined) return '-'
+  return '¥' + Number(val).toLocaleString('zh-CN', { minimumFractionDigits: 2 })
+}
+
 onMounted(() => {
-  loadOptions()
   loadData()
 })
 </script>
 
 <template>
-  <div class="management-page">
-    <!-- 搜索栏 -->
-    <el-card shadow="never" class="search-card">
-      <el-form :model="searchForm" inline>
-        <el-form-item label="所属作业">
-          <el-select v-model="searchForm.operationId" placeholder="全部" clearable style="width: 180px" filterable>
-            <el-option v-for="op in operationOptions" :key="op.id" :label="op.operationName" :value="op.id" />
-          </el-select>
+  <div class="cost-page">
+    <el-card shadow="never">
+      <template #header>
+        <div class="page-header">
+          <span class="page-title">成本管理</span>
+          <el-button type="primary" :icon="Plus" @click="handleAdd">新增成本</el-button>
+        </div>
+      </template>
+
+      <!-- 搜索 -->
+      <el-form :model="searchForm" layout="inline" class="search-form">
+        <el-form-item label="井号">
+          <el-input v-model="searchForm.wellcode" placeholder="井号" clearable style="width:150px" />
         </el-form-item>
-        <el-form-item label="成本类别">
-          <el-select v-model="searchForm.categoryId" placeholder="全部" clearable style="width: 150px">
-            <el-option v-for="c in costCategoryOptions" :key="c.id" :label="c.categoryName" :value="c.id" />
-          </el-select>
+        <el-form-item label="预算单位">
+          <el-input v-model="searchForm.preunit" placeholder="预算单位" clearable style="width:150px" />
+        </el-form-item>
+        <el-form-item label="作业内容">
+          <el-input v-model="searchForm.content" placeholder="作业内容" clearable style="width:150px" />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :icon="Search" @click="handleSearch">查询</el-button>
           <el-button @click="handleReset">重置</el-button>
         </el-form-item>
       </el-form>
-    </el-card>
 
-    <!-- 操作栏 -->
-    <div class="action-bar">
-      <el-button type="primary" :icon="Plus" @click="handleAdd">新增成本</el-button>
-    </div>
+      <!-- 表格 -->
+      <el-table
+        :data="tableData"
+        v-loading="loading"
+        stripe
+        style="width:100%"
+        @expand-change="toggleExpand"
+        :row-key="row => row.code"
+      >
+        <el-table-column type="expand" width="40">
+          <template #default="{ row }">
+            <el-descriptions :column="3" border size="small" class="expand-detail">
+              <template #title>
+                <span style="font-weight:600">详细信息</span>
+              </template>
+              <el-descriptions-item label="预算单位">{{ row.preunit }}</el-descriptions-item>
+              <el-descriptions-item label="预算编制人">{{ row.person || '-' }}</el-descriptions-item>
+              <el-descriptions-item label="预算金额">{{ formatMoney(row.premoney) }}</el-descriptions-item>
+              <el-descriptions-item label="开工日期">{{ row.startdate || '-' }}</el-descriptions-item>
+              <el-descriptions-item label="完工日期">{{ row.finish || '-' }}</el-descriptions-item>
+              <el-descriptions-item label="施工/结算单位">{{ row.settleunit }}</el-descriptions-item>
 
-    <!-- 表格 -->
-    <el-card shadow="never">
-      <el-table :data="tableData" v-loading="loading" stripe border style="width: 100%">
-        <el-table-column prop="operationName" label="所属作业" min-width="150" />
-        <el-table-column prop="categoryName" label="成本类别" width="120" />
-        <el-table-column prop="itemName" label="费用项目" width="130" />
-        <el-table-column prop="quantity" label="数量" width="80" />
-        <el-table-column prop="unitPrice" label="单价" width="100">
-          <template #default="{ row }">¥{{ row.unitPrice?.toLocaleString() }}</template>
+              <el-descriptions-item label="材料1编码" :span="1">{{ row.mat1Code || '-' }}</el-descriptions-item>
+              <el-descriptions-item label="材料1数量">{{ row.mat1Num ?? '-' }}</el-descriptions-item>
+              <el-descriptions-item label="材料1单价">{{ row.mat1Price ? formatMoney(row.mat1Price) : '-' }}</el-descriptions-item>
+              <el-descriptions-item label="材料1小计">{{ row.mat1Sub ? formatMoney(row.mat1Sub) : '-' }}</el-descriptions-item>
+
+              <el-descriptions-item label="材料2编码">{{ row.mat2Code || '-' }}</el-descriptions-item>
+              <el-descriptions-item label="材料2数量">{{ row.mat2Num ?? '-' }}</el-descriptions-item>
+              <el-descriptions-item label="材料2单价">{{ row.mat2Price ? formatMoney(row.mat2Price) : '-' }}</el-descriptions-item>
+              <el-descriptions-item label="材料2小计">{{ row.mat2Sub ? formatMoney(row.mat2Sub) : '-' }}</el-descriptions-item>
+
+              <el-descriptions-item label="材料3编码">{{ row.mat3Code || '-' }}</el-descriptions-item>
+              <el-descriptions-item label="材料3数量">{{ row.mat3Num ?? '-' }}</el-descriptions-item>
+              <el-descriptions-item label="材料3单价">{{ row.mat3Price ? formatMoney(row.mat3Price) : '-' }}</el-descriptions-item>
+              <el-descriptions-item label="材料3小计">{{ row.mat3Sub ? formatMoney(row.mat3Sub) : '-' }}</el-descriptions-item>
+
+              <el-descriptions-item label="材料4编码">{{ row.mat4Code || '-' }}</el-descriptions-item>
+              <el-descriptions-item label="材料4数量">{{ row.mat4Num ?? '-' }}</el-descriptions-item>
+              <el-descriptions-item label="材料4单价">{{ row.mat4Price ? formatMoney(row.mat4Price) : '-' }}</el-descriptions-item>
+              <el-descriptions-item label="材料4小计">{{ row.mat4Sub ? formatMoney(row.mat4Sub) : '-' }}</el-descriptions-item>
+
+              <el-descriptions-item label="材料总成本">{{ formatMoney(row.matcost) }}</el-descriptions-item>
+              <el-descriptions-item label="人工成本">{{ formatMoney(row.humancost) }}</el-descriptions-item>
+              <el-descriptions-item label="设备成本">{{ formatMoney(row.equipcost) }}</el-descriptions-item>
+              <el-descriptions-item label="其他成本">{{ formatMoney(row.othercost) }}</el-descriptions-item>
+
+              <el-descriptions-item label="结算金额">{{ formatMoney(row.settlecost) }}</el-descriptions-item>
+              <el-descriptions-item label="结算经办人">{{ row.settleperson || '-' }}</el-descriptions-item>
+              <el-descriptions-item label="结算日期">{{ row.settledate || '-' }}</el-descriptions-item>
+
+              <el-descriptions-item label="终审金额">{{ row.finalcost != null ? formatMoney(row.finalcost) : '-' }}</el-descriptions-item>
+              <el-descriptions-item label="终审人">{{ row.finalperson || '-' }}</el-descriptions-item>
+              <el-descriptions-item label="终审日期">{{ row.finaldate || '-' }}</el-descriptions-item>
+            </el-descriptions>
+          </template>
         </el-table-column>
-        <el-table-column prop="amount" label="金额" width="120">
-          <template #default="{ row }"><span style="font-weight: 600; color: #e6a23c;">¥{{ row.amount?.toLocaleString() }}</span></template>
+
+        <el-table-column prop="code" label="费用编号" width="130" />
+        <el-table-column prop="wellcode" label="井号" width="100" />
+        <el-table-column prop="preunit" label="预算单位" width="100" />
+        <el-table-column prop="person" label="编制人" width="80" />
+        <el-table-column prop="predate" label="预算日期" width="100" />
+        <el-table-column prop="content" label="作业内容" width="120" />
+        <el-table-column prop="premoney" label="预算金额" width="120" align="right">
+          <template #default="{ row }">{{ formatMoney(row.premoney) }}</template>
         </el-table-column>
-        <el-table-column prop="costDate" label="日期" width="110" />
-        <el-table-column prop="payee" label="收款方" width="130" />
+        <el-table-column prop="settlecost" label="结算金额" width="120" align="right">
+          <template #default="{ row }">{{ formatMoney(row.settlecost) }}</template>
+        </el-table-column>
+        <el-table-column prop="settleunit" label="结算单位" width="120" />
         <el-table-column label="操作" width="160" fixed="right">
           <template #default="{ row }">
-            <el-button size="small" type="primary" :icon="Edit" @click="handleEdit(row)">编辑</el-button>
-            <el-button size="small" type="danger" :icon="Delete" @click="handleDelete(row.id)">删除</el-button>
+            <el-button text size="small" type="primary" :icon="Edit" @click="handleEdit(row)">编辑</el-button>
+            <el-button text size="small" type="danger" :icon="Delete" @click="handleDelete(row.code)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
 
+      <!-- 分页 -->
       <div class="pagination-wrap">
         <el-pagination
           v-model:current-page="pagination.page"
           v-model:page-size="pagination.pageSize"
-          :total="total"
           :page-sizes="[10, 20, 50]"
-          layout="total, sizes, prev, pager, next, jumper"
-          @size-change="handleSizeChange"
+          :total="total"
+          layout="total, sizes, prev, pager, next"
           @current-change="handlePageChange"
+          @size-change="handleSizeChange"
         />
       </div>
     </el-card>
@@ -243,61 +297,135 @@ onMounted(() => {
     <el-dialog
       v-model="dialogVisible"
       :title="isEdit ? '编辑成本' : '新增成本'"
-      width="650px"
+      width="800px"
       :close-on-click-modal="false"
     >
-      <el-form ref="formRef" :model="form" label-width="100px" :rules="formRules">
+      <el-form ref="formRef" :model="form" :rules="formRules" label-width="120px" class="cost-form">
+        <el-divider content-position="left">预算信息</el-divider>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="所属作业" prop="operationId">
-              <el-select v-model="form.operationId" placeholder="请选择" style="width: 100%" filterable>
-                <el-option v-for="op in operationOptions" :key="op.id" :label="op.operationName" :value="op.id" />
-              </el-select>
+            <el-form-item label="费用编号" prop="code">
+              <el-input v-model="form.code" placeholder="费用编号" :disabled="isEdit" />
+            </el-form-item>
+            <el-form-item label="预算单位" prop="preunit">
+              <el-input v-model="form.preunit" placeholder="采油队代码" />
+            </el-form-item>
+            <el-form-item label="井号" prop="wellcode">
+              <el-input v-model="form.wellcode" placeholder="油水井编号" />
+            </el-form-item>
+            <el-form-item label="预算金额">
+              <el-input-number v-model="form.premoney" :min="0" :precision="2" style="width:100%" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="成本类别" prop="categoryId">
-              <el-select v-model="form.categoryId" placeholder="请选择" style="width: 100%">
-                <el-option v-for="c in costCategoryOptions" :key="c.id" :label="c.categoryName" :value="c.id" />
-              </el-select>
+            <el-form-item label="编制人">
+              <el-input v-model="form.person" placeholder="预算编制人" />
+            </el-form-item>
+            <el-form-item label="预算日期" prop="predate">
+              <el-date-picker v-model="form.predate" type="date" value-format="YYYY-MM-DD" style="width:100%" />
+            </el-form-item>
+            <el-form-item label="开工日期">
+              <el-date-picker v-model="form.startdate" type="date" value-format="YYYY-MM-DD" style="width:100%" />
+            </el-form-item>
+            <el-form-item label="完工日期">
+              <el-date-picker v-model="form.finish" type="date" value-format="YYYY-MM-DD" style="width:100%" />
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item label="费用项目" prop="itemName">
-          <el-input v-model="form.itemName" placeholder="请输入费用项目名称" />
-        </el-form-item>
+
+        <el-divider content-position="left">施工信息</el-divider>
         <el-row :gutter="20">
-          <el-col :span="8">
-            <el-form-item label="数量" prop="quantity">
-              <el-input-number v-model="form.quantity" :min="0" :precision="2" style="width: 100%" @change="updateAmount" />
+          <el-col :span="12">
+            <el-form-item label="结算单位" prop="settleunit">
+              <el-input v-model="form.settleunit" placeholder="施工/结算单位" />
             </el-form-item>
           </el-col>
-          <el-col :span="8">
-            <el-form-item label="单价" prop="unitPrice">
-              <el-input-number v-model="form.unitPrice" :min="0" :precision="2" style="width: 100%" @change="updateAmount" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="金额">
-              <el-input :model-value="computedAmount" disabled style="width: 100%">
-                <template #prefix>¥</template>
-              </el-input>
+          <el-col :span="12">
+            <el-form-item label="作业内容">
+              <el-input v-model="form.content" placeholder="作业内容" />
             </el-form-item>
           </el-col>
         </el-row>
+
+        <el-divider content-position="left">材料明细</el-divider>
+        <template v-for="i in 4" :key="i">
+          <el-row :gutter="20" class="mat-row">
+            <el-col :span="6">
+              <el-form-item :label="`材料${i}编码`" :label-width="100">
+                <el-input v-model="form['mat' + i + 'Code']" :placeholder="`材料${i}编码`" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="5">
+              <el-form-item :label="`数量`" :label-width="50">
+                <el-input-number v-model="form['mat' + i + 'Num']" :min="0" style="width:100%" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item :label="`单价`" :label-width="50">
+                <el-input-number v-model="form['mat' + i + 'Price']" :min="0" :precision="2" style="width:100%" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="5">
+              <el-form-item :label="`小计`" :label-width="50">
+                <el-input-number v-model="form['mat' + i + 'Sub']" :min="0" :precision="2" style="width:100%" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </template>
+
+        <el-divider content-position="left">成本汇总</el-divider>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="日期" prop="costDate">
-              <el-date-picker v-model="form.costDate" type="date" placeholder="选择日期" style="width: 100%" value-format="YYYY-MM-DD" />
+            <el-form-item label="材料总成本">
+              <el-input-number v-model="form.matcost" :min="0" :precision="2" style="width:100%" />
+            </el-form-item>
+            <el-form-item label="人工成本">
+              <el-input-number v-model="form.humancost" :min="0" :precision="2" style="width:100%" />
+            </el-form-item>
+            <el-form-item label="设备成本">
+              <el-input-number v-model="form.equipcost" :min="0" :precision="2" style="width:100%" />
+            </el-form-item>
+            <el-form-item label="其他成本">
+              <el-input-number v-model="form.othercost" :min="0" :precision="2" style="width:100%" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-divider content-position="left">结算</el-divider>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="结算金额">
+              <el-input-number v-model="form.settlecost" :min="0" :precision="2" style="width:100%" />
+            </el-form-item>
+            <el-form-item label="结算经办人">
+              <el-input v-model="form.settleperson" placeholder="结算经办人" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="收款方" prop="payee">
-              <el-input v-model="form.payee" placeholder="请输入收款方名称" />
+            <el-form-item label="结算日期">
+              <el-date-picker v-model="form.settledate" type="date" value-format="YYYY-MM-DD" style="width:100%" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-divider content-position="left">终审</el-divider>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="终审金额">
+              <el-input-number v-model="form.finalcost" :min="0" :precision="2" style="width:100%" />
+            </el-form-item>
+            <el-form-item label="终审人">
+              <el-input v-model="form.finalperson" placeholder="终审人" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="终审日期">
+              <el-date-picker v-model="form.finaldate" type="date" value-format="YYYY-MM-DD" style="width:100%" />
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
+
       <template #footer>
         <el-button @click="dialogVisible = false">取消</el-button>
         <el-button type="primary" @click="handleSave">保存</el-button>
@@ -306,14 +434,44 @@ onMounted(() => {
   </div>
 </template>
 
-<script>
-import { Search, Plus, Edit, Delete } from '@element-plus/icons-vue'
-export default { components: { Search, Plus, Edit, Delete } }
-</script>
-
 <style scoped>
-.management-page { max-width: 1400px; margin: 0 auto; }
-.search-card { margin-bottom: 16px; border-radius: 8px; }
-.action-bar { margin-bottom: 16px; }
-.pagination-wrap { margin-top: 20px; display: flex; justify-content: flex-end; }
+.cost-page {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.page-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.search-form {
+  margin-bottom: 16px;
+}
+
+.pagination-wrap {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.cost-form {
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: 0 8px;
+}
+
+.mat-row {
+  margin-bottom: 8px;
+}
+
+.expand-detail {
+  margin: 8px 0;
+}
 </style>

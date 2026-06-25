@@ -1,6 +1,6 @@
 package com.mingbo.controller;
 
-import com.mingbo.mapper.CostDetailMapper;
+import com.mingbo.mapper.CostMapper;
 import com.mingbo.mapper.OperationMapper;
 import com.mingbo.mapper.WellMapper;
 import com.mingbo.pojo.Result;
@@ -25,7 +25,7 @@ public class DashboardController {
     private OperationMapper operationMapper;
 
     @Autowired
-    private CostDetailMapper costDetailMapper;
+    private CostMapper costMapper;
 
     @GetMapping("/stats")
     public Result stats() {
@@ -34,7 +34,7 @@ public class DashboardController {
         stats.put("totalWells", wellMapper.countAll() != null ? wellMapper.countAll() : 0);
         stats.put("productionWells", wellMapper.countProduction() != null ? wellMapper.countProduction() : 0);
         stats.put("monthlyOperations", operationMapper.countMonthly() != null ? operationMapper.countMonthly() : 0);
-        stats.put("monthlyCost", costDetailMapper.sumMonthly() != null ? costDetailMapper.sumMonthly() : 0);
+        stats.put("monthlyCost", costMapper.sumMonthly() != null ? costMapper.sumMonthly() : 0);
 
         List<Map<String, Object>> wellTypeDistribution = wellMapper.selectWellTypeStats()
                 .stream()
@@ -47,7 +47,7 @@ public class DashboardController {
                 .collect(Collectors.toList());
         stats.put("wellTypeDistribution", wellTypeDistribution);
 
-        List<Map<String, Object>> trend = costDetailMapper.sumMonthlyTrend();
+        List<Map<String, Object>> trend = costMapper.sumMonthlyTrend();
         List<String> monthLabels = trend.stream().map(t -> (String) t.get("month")).collect(Collectors.toList());
         List<Number> monthlyCostTrend = trend.stream().map(t -> (Number) t.get("total")).collect(Collectors.toList());
         stats.put("monthLabels", monthLabels);
@@ -68,7 +68,7 @@ public class DashboardController {
         Map<String, Object> summary = new HashMap<>();
         summary.put("totalWells", wellMapper.countAll());
         summary.put("totalOperations", operationMapper.countAll());
-        summary.put("totalCost", costDetailMapper.sumAll());
+        summary.put("totalCost", costMapper.sumAll());
         summary.put("plannedOperations", operationMapper.countByStatus("计划"));
         summary.put("inProgressOperations", operationMapper.countByStatus("进行中"));
         summary.put("completedOperations", operationMapper.countByStatus("已完成"));

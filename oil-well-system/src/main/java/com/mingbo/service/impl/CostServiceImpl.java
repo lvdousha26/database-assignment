@@ -1,52 +1,41 @@
 package com.mingbo.service.impl;
 
-import com.mingbo.mapper.CostDetailMapper;
-import com.mingbo.pojo.CostDetail;
+import com.mingbo.mapper.CostMapper;
+import com.mingbo.pojo.Cost;
 import com.mingbo.service.CostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class CostServiceImpl implements CostService {
 
     @Autowired
-    private CostDetailMapper costDetailMapper;
+    private CostMapper costMapper;
 
     @Override
-    public CostDetail getById(Long id) {
-        return costDetailMapper.selectById(id);
+    public Cost getByCode(String code) {
+        return costMapper.selectByCode(code);
     }
 
     @Override
-    public List<CostDetail> list(Long operationId, Long categoryId) {
-        return costDetailMapper.selectByCondition(operationId, categoryId);
+    public List<Cost> list(String wellcode, String preunit, String content) {
+        return costMapper.selectByCondition(wellcode, preunit, content);
     }
 
     @Override
-    public void add(CostDetail costDetail) {
-        costDetailMapper.insert(costDetail);
+    public void add(Cost cost) {
+        costMapper.insert(cost);
     }
 
     @Override
-    public void update(CostDetail costDetail) {
-        costDetailMapper.update(costDetail);
+    public void update(Cost cost) {
+        costMapper.update(cost);
     }
 
     @Override
-    public void delete(Long id) {
-        costDetailMapper.deleteById(id);
-    }
-
-    @Override
-    public List<Map<String, Object>> sumByCategory() {
-        return costDetailMapper.sumByCategory();
-    }
-
-    @Override
-    public List<Map<String, Object>> sumByMonth() {
-        return costDetailMapper.sumByMonth();
+    public void delete(String code) {
+        costMapper.deleteByCode(code);
     }
 }

@@ -81,45 +81,62 @@ public class ToolDefinition {
                         "id", strProp("作业 ID")
                 ), List.of("id"))),
 
-                // 成本明细
-                tool("list_costs", "按条件查询成本明细列表，不传参则查询全部", objectParams(Map.of(
-                        "operationId", strProp("作业 ID"),
-                        "categoryId", strProp("成本类别 ID")
+                // 成本（预算→结算→终审）
+                tool("list_costs", "按条件查询成本记录列表，不传参则查询全部", objectParams(Map.of(
+                        "wellcode", strProp("井号（模糊匹配）"),
+                        "preunit", strProp("预算单位（模糊匹配）"),
+                        "content", strProp("作业内容（模糊匹配）")
                 ), List.of())),
-                tool("add_cost", "新增成本明细记录", objectParams(Map.of(
-                        "operationId", strProp("作业 ID"),
-                        "categoryId", strProp("成本类别 ID"),
-                        "itemName", strProp("费用项目名称"),
-                        "quantity", strProp("数量"),
-                        "unitPrice", strProp("单价"),
-                        "amount", strProp("金额（不传则自动计算为 quantity * unitPrice）"),
-                        "costDate", strProp("费用日期，格式 yyyy-MM-dd"),
-                        "payee", strProp("收款方"),
-                        "notes", strProp("备注")
-                ), List.of("operationId", "categoryId", "itemName"))),
-                tool("update_cost", "修改成本明细，只传需要修改的字段", objectParams(Map.of(
-                        "id", strProp("成本明细 ID"),
-                        "operationId", strProp("作业 ID"),
-                        "categoryId", strProp("成本类别 ID"),
-                        "itemName", strProp("费用项目名称"),
-                        "quantity", strProp("数量"),
-                        "unitPrice", strProp("单价"),
-                        "amount", strProp("金额"),
-                        "costDate", strProp("费用日期，格式 yyyy-MM-dd"),
-                        "payee", strProp("收款方"),
-                        "notes", strProp("备注")
-                ), List.of("id"))),
-                tool("delete_cost", "删除成本明细记录（请先让用户确认后再执行）", objectParams(Map.of(
-                        "id", strProp("成本明细 ID")
-                ), List.of("id"))),
-                tool("sum_cost_by_category", "按成本类别汇总金额", objectParams(Map.of(), List.of())),
-                tool("sum_cost_by_month", "按月份汇总成本金额", objectParams(Map.of(), List.of())),
-
-                // 作业类型
-                tool("list_operation_types", "查询所有作业类型", objectParams(Map.of(), List.of())),
-
-                // 成本类别
-                tool("list_cost_categories", "查询所有成本类别", objectParams(Map.of(), List.of()))
+                tool("get_cost", "按费用编号查询单条成本记录", objectParams(Map.of(
+                        "code", strProp("费用编号")
+                ), List.of("code"))),
+                tool("add_cost", "新增成本记录，包含预算信息、材料、人工、设备、其他成本", objectParams(map(
+                        "code", strProp("费用编号"),
+                        "preunit", strProp("预算单位（采油队代码）"),
+                        "wellcode", strProp("井号"),
+                        "premoney", strProp("预算总金额"),
+                        "person", strProp("预算编制人"),
+                        "predate", strProp("预算编制日期，格式 yyyy-MM-dd"),
+                        "startdate", strProp("工程开工日期，格式 yyyy-MM-dd"),
+                        "finish", strProp("工程完工日期，格式 yyyy-MM-dd"),
+                        "settleunit", strProp("施工/结算单位"),
+                        "content", strProp("作业内容"),
+                        "matcost", strProp("材料总成本"),
+                        "humancost", strProp("人工成本"),
+                        "equipcost", strProp("设备成本"),
+                        "othercost", strProp("其他成本"),
+                        "settlecost", strProp("结算总金额"),
+                        "settleperson", strProp("结算经办人"),
+                        "settledate", strProp("结算日期，格式 yyyy-MM-dd"),
+                        "finalcost", strProp("入账/终审金额"),
+                        "finalperson", strProp("入账/终审人"),
+                        "finaldate", strProp("入账/终审日期，格式 yyyy-MM-dd")
+                ), List.of("code", "preunit", "wellcode", "predate", "settleunit"))),
+                tool("update_cost", "修改成本记录，只传需要修改的字段", objectParams(map(
+                        "code", strProp("费用编号"),
+                        "preunit", strProp("预算单位（采油队代码）"),
+                        "wellcode", strProp("井号"),
+                        "premoney", strProp("预算总金额"),
+                        "person", strProp("预算编制人"),
+                        "predate", strProp("预算编制日期，格式 yyyy-MM-dd"),
+                        "startdate", strProp("工程开工日期，格式 yyyy-MM-dd"),
+                        "finish", strProp("工程完工日期，格式 yyyy-MM-dd"),
+                        "settleunit", strProp("施工/结算单位"),
+                        "content", strProp("作业内容"),
+                        "matcost", strProp("材料总成本"),
+                        "humancost", strProp("人工成本"),
+                        "equipcost", strProp("设备成本"),
+                        "othercost", strProp("其他成本"),
+                        "settlecost", strProp("结算总金额"),
+                        "settleperson", strProp("结算经办人"),
+                        "settledate", strProp("结算日期，格式 yyyy-MM-dd"),
+                        "finalcost", strProp("入账/终审金额"),
+                        "finalperson", strProp("入账/终审人"),
+                        "finaldate", strProp("入账/终审日期，格式 yyyy-MM-dd")
+                ), List.of("code"))),
+                tool("delete_cost", "删除成本记录（请先让用户确认后再执行）", objectParams(Map.of(
+                        "code", strProp("费用编号")
+                ), List.of("code")))
         );
     }
 

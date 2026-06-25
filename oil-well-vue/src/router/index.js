@@ -26,14 +26,6 @@ const router = createRouter({
           component: () => import('@/views/admin/CostManagement.vue')
         },
         {
-          path: '/admin/operation-type',
-          component: () => import('@/views/admin/OperationTypeManagement.vue')
-        },
-        {
-          path: '/admin/cost-category',
-          component: () => import('@/views/admin/CostCategoryManagement.vue')
-        },
-        {
           path: '/admin/ai',
           component: () => import('@/views/admin/AIChat.vue')
         },

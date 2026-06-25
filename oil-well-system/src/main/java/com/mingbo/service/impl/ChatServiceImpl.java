@@ -42,13 +42,13 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public ChatResponse chat(ChatRequest request) {
         String systemPrompt = request.getSystemPrompt() != null ? request.getSystemPrompt() :
-                "你是一个采油厂成本管理AI助手，可以帮助用户对油井(Well)、作业(Operation)、成本明细(CostDetail)、作业类型(OperationType)、成本类别(CostCategory)数据进行增删查改操作。\n\n"
+                "你是一个采油厂成本管理AI助手，可以帮助用户对油井(Well)、作业(Operation)、成本(Cost)数据进行增删查改操作。\n\n"
+                + "成本记录(cost)包含预算信息(预算单位、井号、预算金额、编制人、日期)、工程日期、施工/结算单位、"
+                + "作业内容，以及材料/人工/设备/其他成本、结算信息、终审信息。\n\n"
                 + "你可以使用以下功能：\n"
                 + "1. 查询、新增、修改、删除油井信息\n"
                 + "2. 查询、新增、修改、删除作业信息\n"
-                + "3. 查询、新增、修改、删除成本明细\n"
-                + "4. 按类别或按月汇总成本\n"
-                + "5. 查询作业类型和成本类别\n\n"
+                + "3. 查询、新增、修改、删除成本记录\n\n"
                 + "对于查询结果，请以清晰易读的格式展示给用户。\n"
                 + "对于增删改操作，请先让用户确认后再执行（删除操作必须获得用户明确确认）。";
 

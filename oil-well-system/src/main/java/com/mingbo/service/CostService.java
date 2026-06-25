@@ -1,23 +1,18 @@
 package com.mingbo.service;
 
-import com.mingbo.pojo.CostDetail;
+import com.mingbo.pojo.Cost;
 
 import java.util.List;
-import java.util.Map;
 
 public interface CostService {
 
-    CostDetail getById(Long id);
+    Cost getByCode(String code);
 
-    List<CostDetail> list(Long operationId, Long categoryId);
+    List<Cost> list(String wellcode, String preunit, String content);
 
-    void add(CostDetail costDetail);
+    void add(Cost cost);
 
-    void update(CostDetail costDetail);
+    void update(Cost cost);
 
-    void delete(Long id);
-
-    List<Map<String, Object>> sumByCategory();
-
-    List<Map<String, Object>> sumByMonth();
+    void delete(String code);
 }

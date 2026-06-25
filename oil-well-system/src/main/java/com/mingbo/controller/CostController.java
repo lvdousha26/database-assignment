@@ -2,7 +2,7 @@ package com.mingbo.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.mingbo.pojo.CostDetail;
+import com.mingbo.pojo.Cost;
 import com.mingbo.pojo.Result;
 import com.mingbo.service.CostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,46 +18,37 @@ public class CostController {
     private CostService costService;
 
     @GetMapping("/list")
-    public Result list(@RequestParam(required = false) Long operationId,
-                       @RequestParam(required = false) Long categoryId,
+    public Result list(@RequestParam(required = false) String wellcode,
+                       @RequestParam(required = false) String preunit,
+                       @RequestParam(required = false) String content,
                        @RequestParam(defaultValue = "1") Integer page,
                        @RequestParam(defaultValue = "10") Integer pageSize) {
         PageHelper.startPage(page, pageSize);
-        List<CostDetail> list = costService.list(operationId, categoryId);
-        PageInfo<CostDetail> pageInfo = new PageInfo<>(list);
+        List<Cost> list = costService.list(wellcode, preunit, content);
+        PageInfo<Cost> pageInfo = new PageInfo<>(list);
         return Result.success(pageInfo);
     }
 
-    @GetMapping("/{id}")
-    public Result getById(@PathVariable Long id) {
-        return Result.success(costService.getById(id));
+    @GetMapping("/{code}")
+    public Result getByCode(@PathVariable String code) {
+        return Result.success(costService.getByCode(code));
     }
 
     @PostMapping("/add")
-    public Result add(@RequestBody CostDetail costDetail) {
-        costService.add(costDetail);
+    public Result add(@RequestBody Cost cost) {
+        costService.add(cost);
         return Result.success();
     }
 
     @PutMapping("/update")
-    public Result update(@RequestBody CostDetail costDetail) {
-        costService.update(costDetail);
+    public Result update(@RequestBody Cost cost) {
+        costService.update(cost);
         return Result.success();
     }
 
-    @DeleteMapping("/delete/{id}")
-    public Result delete(@PathVariable Long id) {
-        costService.delete(id);
+    @DeleteMapping("/delete/{code}")
+    public Result delete(@PathVariable String code) {
+        costService.delete(code);
         return Result.success();
-    }
-
-    @GetMapping("/sum-by-category")
-    public Result sumByCategory() {
-        return Result.success(costService.sumByCategory());
-    }
-
-    @GetMapping("/sum-by-month")
-    public Result sumByMonth() {
-        return Result.success(costService.sumByMonth());
     }
 }

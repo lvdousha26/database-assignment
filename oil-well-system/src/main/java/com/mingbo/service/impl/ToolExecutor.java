@@ -21,17 +21,12 @@ public class ToolExecutor {
     private final WellService wellService;
     private final OperationService operationService;
     private final CostService costService;
-    private final OperationTypeService operationTypeService;
-    private final CostCategoryService costCategoryService;
 
     public ToolExecutor(WellService wellService, OperationService operationService,
-                        CostService costService, OperationTypeService operationTypeService,
-                        CostCategoryService costCategoryService) {
+                        CostService costService) {
         this.wellService = wellService;
         this.operationService = operationService;
         this.costService = costService;
-        this.operationTypeService = operationTypeService;
-        this.costCategoryService = costCategoryService;
         this.objectMapper = new ObjectMapper();
         this.objectMapper.registerModule(new JavaTimeModule());
     }
@@ -49,13 +44,10 @@ public class ToolExecutor {
                 case "update_operation" -> updateOperation(args);
                 case "delete_operation" -> deleteOperation(args);
                 case "list_costs" -> listCosts(args);
+                case "get_cost" -> getCost(args);
                 case "add_cost" -> addCost(args);
                 case "update_cost" -> updateCost(args);
                 case "delete_cost" -> deleteCost(args);
-                case "sum_cost_by_category" -> sumCostByCategory();
-                case "sum_cost_by_month" -> sumCostByMonth();
-                case "list_operation_types" -> listOperationTypes();
-                case "list_cost_categories" -> listCostCategories();
                 default -> "未知工具: " + toolName;
             };
         } catch (Exception e) {
@@ -172,82 +164,80 @@ public class ToolExecutor {
         return "操作成功: 已删除作业 (ID = " + id + ")";
     }
 
-    // ========== CostDetail ==========
+    // ========== Cost ==========
 
     private String listCosts(Map<String, Object> args) {
-        Long operationId = getLong(args, "operationId");
-        Long categoryId = getLong(args, "categoryId");
-        List<CostDetail> list = costService.list(operationId, categoryId);
+        String wellcode = getString(args, "wellcode");
+        String preunit = getString(args, "preunit");
+        String content = getString(args, "content");
+        List<Cost> list = costService.list(wellcode, preunit, content);
         return toJson(list);
+    }
+
+    private String getCost(Map<String, Object> args) {
+        String code = getString(args, "code");
+        Cost cost = costService.getByCode(code);
+        return cost != null ? toJson(cost) : "未找到费用编号为 " + code + " 的成本记录";
     }
 
     private String addCost(Map<String, Object> args) {
-        BigDecimal quantity = getBigDecimal(args, "quantity");
-        BigDecimal unitPrice = getBigDecimal(args, "unitPrice");
-        BigDecimal amount = getBigDecimal(args, "amount");
-        if (amount == null && quantity != null && unitPrice != null) {
-            amount = quantity.multiply(unitPrice);
-        }
-        CostDetail cost = CostDetail.builder()
-                .operationId(getLong(args, "operationId"))
-                .categoryId(getLong(args, "categoryId"))
-                .itemName(getString(args, "itemName"))
-                .quantity(quantity)
-                .unitPrice(unitPrice)
-                .amount(amount)
-                .costDate(getLocalDate(args, "costDate"))
-                .payee(getString(args, "payee"))
-                .notes(getString(args, "notes"))
+        Cost cost = Cost.builder()
+                .code(getString(args, "code"))
+                .preunit(getString(args, "preunit"))
+                .wellcode(getString(args, "wellcode"))
+                .premoney(getBigDecimal(args, "premoney"))
+                .person(getString(args, "person"))
+                .predate(getLocalDate(args, "predate"))
+                .startdate(getLocalDate(args, "startdate"))
+                .finish(getLocalDate(args, "finish"))
+                .settleunit(getString(args, "settleunit"))
+                .content(getString(args, "content"))
+                .matcost(getBigDecimal(args, "matcost"))
+                .humancost(getBigDecimal(args, "humancost"))
+                .equipcost(getBigDecimal(args, "equipcost"))
+                .othercost(getBigDecimal(args, "othercost"))
+                .settlecost(getBigDecimal(args, "settlecost"))
+                .settleperson(getString(args, "settleperson"))
+                .settledate(getLocalDate(args, "settledate"))
+                .finalcost(getBigDecimal(args, "finalcost"))
+                .finalperson(getString(args, "finalperson"))
+                .finaldate(getLocalDate(args, "finaldate"))
                 .build();
         costService.add(cost);
-        return "操作成功: 已新增成本明细，ID = " + cost.getId();
+        return "操作成功: 已新增成本记录，编号 = " + cost.getCode();
     }
 
     private String updateCost(Map<String, Object> args) {
-        Long id = getLong(args, "id");
-        CostDetail cost = costService.getById(id);
-        if (cost == null) return "未找到 ID 为 " + id + " 的成本明细";
-        if (args.containsKey("operationId")) cost.setOperationId(getLong(args, "operationId"));
-        if (args.containsKey("categoryId")) cost.setCategoryId(getLong(args, "categoryId"));
-        if (args.containsKey("itemName")) cost.setItemName(getString(args, "itemName"));
-        if (args.containsKey("quantity")) cost.setQuantity(getBigDecimal(args, "quantity"));
-        if (args.containsKey("unitPrice")) cost.setUnitPrice(getBigDecimal(args, "unitPrice"));
-        if (args.containsKey("amount")) cost.setAmount(getBigDecimal(args, "amount"));
-        if (args.containsKey("costDate")) cost.setCostDate(getLocalDate(args, "costDate"));
-        if (args.containsKey("payee")) cost.setPayee(getString(args, "payee"));
-        if (args.containsKey("notes")) cost.setNotes(getString(args, "notes"));
+        String code = getString(args, "code");
+        Cost cost = costService.getByCode(code);
+        if (cost == null) return "未找到费用编号为 " + code + " 的成本记录";
+        if (args.containsKey("preunit")) cost.setPreunit(getString(args, "preunit"));
+        if (args.containsKey("wellcode")) cost.setWellcode(getString(args, "wellcode"));
+        if (args.containsKey("premoney")) cost.setPremoney(getBigDecimal(args, "premoney"));
+        if (args.containsKey("person")) cost.setPerson(getString(args, "person"));
+        if (args.containsKey("predate")) cost.setPredate(getLocalDate(args, "predate"));
+        if (args.containsKey("startdate")) cost.setStartdate(getLocalDate(args, "startdate"));
+        if (args.containsKey("finish")) cost.setFinish(getLocalDate(args, "finish"));
+        if (args.containsKey("settleunit")) cost.setSettleunit(getString(args, "settleunit"));
+        if (args.containsKey("content")) cost.setContent(getString(args, "content"));
+        if (args.containsKey("matcost")) cost.setMatcost(getBigDecimal(args, "matcost"));
+        if (args.containsKey("humancost")) cost.setHumancost(getBigDecimal(args, "humancost"));
+        if (args.containsKey("equipcost")) cost.setEquipcost(getBigDecimal(args, "equipcost"));
+        if (args.containsKey("othercost")) cost.setOthercost(getBigDecimal(args, "othercost"));
+        if (args.containsKey("settlecost")) cost.setSettlecost(getBigDecimal(args, "settlecost"));
+        if (args.containsKey("settleperson")) cost.setSettleperson(getString(args, "settleperson"));
+        if (args.containsKey("settledate")) cost.setSettledate(getLocalDate(args, "settledate"));
+        if (args.containsKey("finalcost")) cost.setFinalcost(getBigDecimal(args, "finalcost"));
+        if (args.containsKey("finalperson")) cost.setFinalperson(getString(args, "finalperson"));
+        if (args.containsKey("finaldate")) cost.setFinaldate(getLocalDate(args, "finaldate"));
         costService.update(cost);
-        return "操作成功: 已更新成本明细 (ID = " + id + ")";
+        return "操作成功: 已更新成本记录 (编号 = " + code + ")";
     }
 
     private String deleteCost(Map<String, Object> args) {
-        Long id = getLong(args, "id");
-        costService.delete(id);
-        return "操作成功: 已删除成本明细 (ID = " + id + ")";
-    }
-
-    private String sumCostByCategory() {
-        List<Map<String, Object>> result = costService.sumByCategory();
-        return toJson(result);
-    }
-
-    private String sumCostByMonth() {
-        List<Map<String, Object>> result = costService.sumByMonth();
-        return toJson(result);
-    }
-
-    // ========== OperationType ==========
-
-    private String listOperationTypes() {
-        List<OperationType> list = operationTypeService.list();
-        return toJson(list);
-    }
-
-    // ========== CostCategory ==========
-
-    private String listCostCategories() {
-        List<CostCategory> list = costCategoryService.list();
-        return toJson(list);
+        String code = getString(args, "code");
+        costService.delete(code);
+        return "操作成功: 已删除成本记录 (编号 = " + code + ")";
     }
 
     // ========== Helpers ==========

@@ -39,15 +39,6 @@ CREATE TABLE tb_well (
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- 作业类型表
-DROP TABLE IF EXISTS tb_operation_type;
-CREATE TABLE tb_operation_type (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  type_name VARCHAR(100) NOT NULL COMMENT '作业类型名称',
-  description TEXT COMMENT '描述',
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
 -- 作业记录表
 DROP TABLE IF EXISTS tb_operation;
 CREATE TABLE tb_operation (
@@ -64,38 +55,49 @@ CREATE TABLE tb_operation (
   notes TEXT COMMENT '备注',
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (well_id) REFERENCES tb_well(id) ON DELETE CASCADE,
-  FOREIGN KEY (operation_type_id) REFERENCES tb_operation_type(id)
+  FOREIGN KEY (well_id) REFERENCES tb_well(id) ON DELETE CASCADE
 );
 
--- 成本类别表
-DROP TABLE IF EXISTS tb_cost_category;
-CREATE TABLE tb_cost_category (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  category_name VARCHAR(100) NOT NULL COMMENT '成本类别名称',
-  parent_id BIGINT DEFAULT NULL COMMENT '父类别ID',
-  description TEXT COMMENT '描述',
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (parent_id) REFERENCES tb_cost_category(id)
-);
-
--- 成本明细表
-DROP TABLE IF EXISTS tb_cost_detail;
-CREATE TABLE tb_cost_detail (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  operation_id BIGINT NOT NULL COMMENT '关联作业ID',
-  category_id BIGINT NOT NULL COMMENT '成本类别ID',
-  item_name VARCHAR(200) COMMENT '费用项目',
-  quantity DECIMAL(12,2) DEFAULT 1 COMMENT '数量',
-  unit_price DECIMAL(12,2) DEFAULT 0 COMMENT '单价',
-  amount DECIMAL(14,2) DEFAULT 0 COMMENT '金额',
-  cost_date DATE COMMENT '发生日期',
-  payee VARCHAR(100) COMMENT '收款方/供应商',
-  notes TEXT COMMENT '备注',
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (operation_id) REFERENCES tb_operation(id) ON DELETE CASCADE,
-  FOREIGN KEY (category_id) REFERENCES tb_cost_category(id)
-);
+-- 成本总表（预算→结算→终审）
+DROP TABLE IF EXISTS tb_cost;
+CREATE TABLE tb_cost (
+  code CHAR(20) NOT NULL PRIMARY KEY COMMENT '费用编号/作业项目编号',
+  preunit CHAR(20) NOT NULL COMMENT '预算单位（采油队代码）',
+  wellcode CHAR(20) NOT NULL COMMENT '井号（油水井编号）',
+  premoney DECIMAL(14,2) COMMENT '预算总金额',
+  person CHAR(20) COMMENT '预算编制人',
+  predate DATE NOT NULL COMMENT '预算编制日期',
+  startdate DATE COMMENT '工程开工日期',
+  finish DATE COMMENT '工程完工日期',
+  settleunit CHAR(20) NOT NULL COMMENT '施工/结算单位',
+  content CHAR(20) COMMENT '作业内容/施工内容',
+  mat1_code CHAR(20),
+  mat1_num INT DEFAULT 0 CHECK (mat1_num >= 0),
+  mat1_price DECIMAL(14,2) CHECK (mat1_price >= 0),
+  mat1_sub DECIMAL(14,2),
+  mat2_code CHAR(20),
+  mat2_num INT DEFAULT 0 CHECK (mat2_num >= 0),
+  mat2_price DECIMAL(14,2) CHECK (mat2_price >= 0),
+  mat2_sub DECIMAL(14,2),
+  mat3_code CHAR(20),
+  mat3_num INT DEFAULT 0 CHECK (mat3_num >= 0),
+  mat3_price DECIMAL(14,2) CHECK (mat3_price >= 0),
+  mat3_sub DECIMAL(14,2),
+  mat4_code CHAR(20),
+  mat4_num INT DEFAULT 0 CHECK (mat4_num >= 0),
+  mat4_price DECIMAL(14,2) CHECK (mat4_price >= 0),
+  mat4_sub DECIMAL(14,2),
+  matcost DECIMAL(14,2) DEFAULT 0 CHECK (matcost >= 0) COMMENT '材料总成本',
+  humancost DECIMAL(14,2) DEFAULT 0 CHECK (humancost >= 0) COMMENT '人工成本',
+  equipcost DECIMAL(14,2) DEFAULT 0 CHECK (equipcost >= 0) COMMENT '设备成本',
+  othercost DECIMAL(14,2) DEFAULT 0 CHECK (othercost >= 0) COMMENT '其他成本',
+  settlecost DECIMAL(14,2) DEFAULT 0 CHECK (settlecost >= 0) COMMENT '结算总金额',
+  settleperson CHAR(20) COMMENT '结算经办人',
+  settledate DATE COMMENT '结算日期',
+  finalcost DECIMAL(14,2) CHECK (finalcost >= 0) COMMENT '入账/终审金额',
+  finalperson CHAR(20) COMMENT '入账/终审人',
+  finaldate DATE COMMENT '入账/终审日期'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='成本总表';
 
 -- 用户动态表
 DROP TABLE IF EXISTS tb_dynamic;
@@ -115,29 +117,6 @@ CREATE TABLE tb_dynamic (
 INSERT INTO tb_user (username, password, role, status) VALUES
 ('admin', 'admin123', '管理员', 1),
 ('user1', 'user123', '普通用户', 1);
-
--- 默认作业类型
-INSERT INTO tb_operation_type (type_name, description) VALUES
-('修井作业', '油水井维修、检泵等作业'),
-('压裂作业', '水力压裂增产作业'),
-('酸化作业', '酸化处理增注作业'),
-('钻井作业', '新井钻井作业'),
-('测井作业', '地球物理测井'),
-('注水作业', '注水调整作业'),
-('检泵作业', '抽油泵检查维修'),
-('清蜡作业', '油井清蜡作业'),
-('冲砂作业', '井筒冲砂作业'),
-('其他作业', '其他类型的作业');
-
--- 默认成本类别
-INSERT INTO tb_cost_category (category_name, description) VALUES
-('材料费', '作业消耗的材料费用'),
-('人工费', '作业人员工资及补贴'),
-('设备费', '设备租赁及折旧费用'),
-('运输费', '物资运输费用'),
-('外协费', '外部协作单位费用'),
-('管理费', '项目管理费用'),
-('其他费用', '其他相关费用');
 
 -- 示例油水井数据
 INSERT INTO tb_well (well_name, well_type, well_status, field_name, layer, depth, operator, drilling_date, address) VALUES
