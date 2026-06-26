@@ -40,6 +40,11 @@ public class ResourceController {
             @RequestPart("metaData") ReferenceUploadRequest request,
             @RequestPart("file") MultipartFile file) {
 
+        String error = CommonController.validateFile(file);
+        if (error != null) {
+            return Result.error(error);
+        }
+
         // 保存文件到专用存储
         String refPath = null;
         try {

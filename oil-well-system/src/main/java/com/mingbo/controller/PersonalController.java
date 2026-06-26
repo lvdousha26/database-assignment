@@ -70,8 +70,9 @@ public class PersonalController {
     public Result uploadFile(@RequestParam("file") MultipartFile file,
                              @RequestParam("type") String type,
                              @RequestParam("username") String username) {
-        if (file.isEmpty()) {
-            return Result.error("文件为空");
+        String error = CommonController.validateFile(file);
+        if (error != null) {
+            return Result.error(error);
         }
 
         try {
@@ -83,7 +84,8 @@ public class PersonalController {
             }
 
             // 生成唯一文件名
-            String ext = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+            String originalName = file.getOriginalFilename();
+            String ext = originalName != null ? originalName.substring(originalName.lastIndexOf(".")) : ".jpg";
             String filename = type + "_" + username + "_" + UUID.randomUUID().toString().substring(0, 8) + ext;
             File dest = new File(dir, filename);
             log.info("上传文件到: {}", dest.getAbsolutePath());
