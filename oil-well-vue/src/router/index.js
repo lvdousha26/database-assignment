@@ -50,7 +50,36 @@ const router = createRouter({
     {
       path: '/user',
       component: () => import('@/views/user/Layout.vue'),
+      redirect: '/user/home',
       children: [
+        {
+          path: 'home',
+          component: () => import('@/views/admin/AdminHome.vue')
+        },
+        {
+          path: 'well',
+          component: () => import('@/views/admin/WellManagement.vue')
+        },
+        {
+          path: 'operation',
+          component: () => import('@/views/admin/OperationManagement.vue')
+        },
+        {
+          path: 'cost',
+          component: () => import('@/views/admin/CostManagement.vue')
+        },
+        {
+          path: 'ai',
+          component: () => import('@/views/admin/AIChat.vue')
+        },
+        {
+          path: 'message',
+          component: () => import('@/views/admin/MessageManagement.vue')
+        },
+        {
+          path: 'profile',
+          component: () => import('@/views/admin/Profile.vue')
+        },
         {
           path: 'authority',
           component: () => import('@/views/user/PermissionRequest.vue')

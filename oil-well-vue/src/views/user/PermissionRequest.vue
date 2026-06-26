@@ -1,5 +1,10 @@
 <template>
   <div class="permission-request-container">
+    <div style="text-align:right; margin-bottom:12px;">
+      <el-button text type="primary" @click="$router.push('/user/history')">
+        查看申请历史 →
+      </el-button>
+    </div>
     <div class="search-bar">
       <el-input
           v-model="searchQuery"

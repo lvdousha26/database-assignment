@@ -10,7 +10,7 @@
     Menu,
     Delete,
     Edit,
-    ChatLineSquare, ChatLineRound, House, HomeFilled
+    ChatLineSquare, ChatLineRound, House, HomeFilled, Lock
   } from '@element-plus/icons-vue'
 	import {
 		useUserStore
@@ -31,7 +31,7 @@
 <template>
   <div>
     <div class="header">
-      <span>城市管理智能识别平台</span>
+      <span>采油厂油水井作业成本管理系统</span>
 	  <div>
 		  <el-menu
 		    active-text-color="#ffd04b"
@@ -58,6 +58,12 @@
             <Avatar />
           </el-icon>
           <span>个人中心</span>
+        </el-menu-item>
+        <el-menu-item index="/user/authority">
+          <el-icon :size="20">
+            <Lock />
+          </el-icon>
+          <span>权限申请</span>
         </el-menu-item>
 				<el-menu-item index="/chatai">
           <el-icon :size="20">

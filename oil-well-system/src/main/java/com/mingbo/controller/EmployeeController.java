@@ -3,6 +3,7 @@ package com.mingbo.controller;
 
 import com.mingbo.pojo.*;
 import com.mingbo.service.AuthorityService;
+import com.mingbo.service.PermissionService;
 import com.mingbo.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class EmployeeController {
     @Autowired
     private AuthorityService authorityService;
 
+    @Autowired
+    private PermissionService permissionService;
+
     /**
      * 新增员工
      * @param user
@@ -31,6 +35,7 @@ public class EmployeeController {
      */
     @PostMapping
     public Result save(@RequestBody User user) {
+        permissionService.requireAdmin();
         log.info("新增用户：{}", user);
         String username = user.getUsername();
         if (user.getStatus() == null){
@@ -51,6 +56,7 @@ public class EmployeeController {
      */
     @PostMapping("/page")
     public Result page(@RequestBody UserDTO userDTO) {
+        permissionService.requireAdmin();
         log.info("用户分页查询，参数为：{}", userDTO);
         PageResult<?> pageResult = authorityService.getAuthorizedUserByPage(userDTO.getUsername(), userDTO.getPageSize(), userDTO.getCurrentPage());
         return Result.success(pageResult);
@@ -63,6 +69,7 @@ public class EmployeeController {
      */
     @PostMapping("/list")
     public Result selectAll(@RequestBody UserDTO userDTO) {
+        permissionService.requireAdmin();
         log.info("用户分页查询，参数为：{}", userDTO);
         PageResult<?> pageResult = authorityService.getAuthorizedUserByPage(userDTO.getUsername(), userDTO.getPageSize(), userDTO.getCurrentPage());
         return Result.success(pageResult);
@@ -76,6 +83,7 @@ public class EmployeeController {
      */
     @PutMapping("/status/{status}/{id}")
     public Result startOrStop(@PathVariable Integer status,@PathVariable Long id) {
+        permissionService.requireAdmin();
         log.info("启用禁用用户账号：{},{}", status, id);
         authorityService.setStatus(status, id);
         // userService.startOrStop(status, id);
@@ -89,6 +97,7 @@ public class EmployeeController {
      */
     @GetMapping("/{id}")
     public Result getById(@PathVariable Long id) {
+        permissionService.requireAdmin();
         log.info("根据id查询用户信息：{}", id);
         User user = userService.getById(id);
         return Result.success(user);
@@ -101,6 +110,7 @@ public class EmployeeController {
      */
     @PutMapping
     public Result update(@RequestBody User user) {
+        permissionService.requireAdmin();
         log.info("编辑用户信息：{}", user);
         String username = user.getUsername();
         User userObjct = userService.selectByName(username);
@@ -118,6 +128,7 @@ public class EmployeeController {
      */
     @DeleteMapping
     public Result deleteByIds(@RequestBody Long[] ids) {
+        permissionService.requireAdmin();
         log.info("删除用户信息：{}", ids);
         userService.deleteByIds(ids);
         return Result.success();
@@ -125,6 +136,7 @@ public class EmployeeController {
 
     @DeleteMapping("/deleteById/{id}")
     public Result deleteById(@PathVariable Long id) {
+        permissionService.requireAdmin();
         log.info("删除用户信息：{}", id);
         userService.deleteById(id);
         return Result.success();

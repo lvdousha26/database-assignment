@@ -3,6 +3,7 @@ package com.mingbo.controller;
 import com.mingbo.pojo.PageResult;
 import com.mingbo.pojo.Result;
 import com.mingbo.service.AdminSearchService;
+import com.mingbo.service.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,9 @@ public class AdminSearchController {
     @Autowired
     private AdminSearchService adminSearchService;
 
+    @Autowired
+    private PermissionService permissionService;
+
     /**
      * 分页查询管理员列表
      * @param page 当前页码
@@ -31,7 +35,7 @@ public class AdminSearchController {
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer pageSize,
             @RequestParam(required = false) String search) {
-
+        permissionService.requireRead();
         PageResult pageResult = adminSearchService.getAdminList(page, pageSize, search);
         return Result.success(pageResult);
     }
@@ -48,7 +52,7 @@ public class AdminSearchController {
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer pageSize,
             @RequestParam(required = false) String search) {
-
+        permissionService.requireRead();
         PageResult pageResult = adminSearchService.getAvailableAdmins(page, pageSize, search, -1);
         return Result.success(pageResult);
     }

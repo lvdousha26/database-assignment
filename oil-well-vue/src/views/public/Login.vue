@@ -44,7 +44,7 @@ const login = async () => {
         const userStore = useUserStore();
         userStore.setToken(resp.data.data); // 存储 token
         msg.value = "登录成功，即将跳转主页！";
-        await router.push(user.value.role == '普通用户' ? "/admin" : "/admin");
+        await router.push(user.value.role == '普通用户' ? "/user" : "/admin");
       } else {
         // 处理失败的逻辑
         msg.value = resp.data.msg || "登录失败，请稍后再试！";

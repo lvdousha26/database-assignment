@@ -3,6 +3,9 @@ import { ref, onMounted } from 'vue'
 import { getWellList, addWell, updateWell, deleteWell } from '@/api/well'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Search, Plus, Edit, Delete } from '@element-plus/icons-vue'
+import { usePermission } from '@/composables/usePermission'
+
+const { canCreate, canUpdate, canDelete, fetchPermissions } = usePermission()
 
 const tableData = ref([])
 const total = ref(0)
@@ -138,6 +141,7 @@ const handleSizeChange = (size) => {
 
 onMounted(() => {
   loadData()
+  fetchPermissions()
 })
 </script>
 
@@ -168,7 +172,7 @@ onMounted(() => {
 
     <!-- 操作栏 -->
     <div class="action-bar">
-      <el-button type="primary" :icon="Plus" @click="handleAdd">新增油水井</el-button>
+      <el-button type="primary" :icon="Plus" @click="handleAdd" v-if="canCreate">新增油水井</el-button>
     </div>
 
     <!-- 表格 -->
@@ -194,8 +198,8 @@ onMounted(() => {
         <el-table-column prop="drillingDate" label="投产日期" width="120" />
         <el-table-column label="操作" width="160" fixed="right">
           <template #default="{ row }">
-            <el-button size="small" type="primary" :icon="Edit" @click="handleEdit(row)">编辑</el-button>
-            <el-button size="small" type="danger" :icon="Delete" @click="handleDelete(row.id)">删除</el-button>
+            <el-button size="small" type="primary" :icon="Edit" @click="handleEdit(row)" v-if="canUpdate">编辑</el-button>
+            <el-button size="small" type="danger" :icon="Delete" @click="handleDelete(row.id)" v-if="canDelete">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

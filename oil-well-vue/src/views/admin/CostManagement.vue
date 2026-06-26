@@ -3,6 +3,9 @@ import { ref, onMounted } from 'vue'
 import { getCostList, addCost, updateCost, deleteCost } from '@/api/cost'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Search, Plus, Edit, Delete, Expand, Fold } from '@element-plus/icons-vue'
+import { usePermission } from '@/composables/usePermission'
+
+const { canCreate, canUpdate, canDelete, fetchPermissions } = usePermission()
 
 const tableData = ref([])
 const total = ref(0)
@@ -170,6 +173,7 @@ const formatMoney = (val) => {
 
 onMounted(() => {
   loadData()
+  fetchPermissions()
 })
 </script>
 
@@ -179,7 +183,7 @@ onMounted(() => {
       <template #header>
         <div class="page-header">
           <span class="page-title">成本管理</span>
-          <el-button type="primary" :icon="Plus" @click="handleAdd">新增成本</el-button>
+          <el-button type="primary" :icon="Plus" @click="handleAdd" v-if="canCreate">新增成本</el-button>
         </div>
       </template>
 
@@ -273,8 +277,8 @@ onMounted(() => {
         <el-table-column prop="settleunit" label="结算单位" width="120" />
         <el-table-column label="操作" width="200" >
           <template #default="{ row }">
-            <el-button text size="small" type="primary" :icon="Edit" @click="handleEdit(row)">编辑</el-button>
-            <el-button text size="small" type="danger" :icon="Delete" @click="handleDelete(row.code)">删除</el-button>
+            <el-button text size="small" type="primary" :icon="Edit" @click="handleEdit(row)" v-if="canUpdate">编辑</el-button>
+            <el-button text size="small" type="danger" :icon="Delete" @click="handleDelete(row.code)" v-if="canDelete">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

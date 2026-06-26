@@ -40,6 +40,26 @@ CREATE TABLE tb_well (
 );
 
 -- 作业记录表
+DROP TABLE IF EXISTS tb_operation_type;
+CREATE TABLE tb_operation_type (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  type_name VARCHAR(100) NOT NULL COMMENT '作业类型名称',
+  description VARCHAR(500) COMMENT '描述',
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='作业类型表';
+
+INSERT IGNORE INTO tb_operation_type (id, type_name, description) VALUES
+(1, '检泵作业', '检泵及泵维护'),
+(2, '压裂作业', '油层压裂改造'),
+(3, '注水作业', '注水井注水'),
+(4, '酸化作业', '酸化处理'),
+(5, '修井作业', '修井及井口维护'),
+(6, '清蜡作业', '清蜡处理'),
+(7, '测井作业', '测井及数据采集'),
+(8, '钻井作业', '钻井工程'),
+(9, '冲砂作业', '冲砂处理'),
+(10, '其他', '其他类型作业');
+
 DROP TABLE IF EXISTS tb_operation;
 CREATE TABLE tb_operation (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
