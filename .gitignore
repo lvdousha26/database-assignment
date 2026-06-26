@@ -28,6 +28,21 @@ pnpm-lock.yaml
 
 # Screenshots
 screenshot-*.png
+*.png
 
 # Node
 node_modules/
+
+# Claude
+.claude/
+
+# Playwright MCP
+.playwright-mcp/
+
+# Temp files
+start_mysql.bat
+tmp-my.cnf
+message-page-snap.yml
+
+# User uploaded assets
+oil-well-system/assets/
