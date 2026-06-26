@@ -55,9 +55,18 @@
     <el-dialog
         v-model="dialogVisible"
         title="申请权限"
-        width="30%"
+        width="400px"
         :before-close="handleClose"
     >
+      <div style="margin-bottom: 16px;">
+        <label style="display:block; margin-bottom:8px; font-weight:500;">选择要申请的权限：</label>
+        <el-checkbox-group v-model="selectedPerms">
+          <el-checkbox label="create">增（Create）</el-checkbox>
+          <el-checkbox label="read">查（Read）</el-checkbox>
+          <el-checkbox label="update">改（Update）</el-checkbox>
+          <el-checkbox label="delete">删（Delete）</el-checkbox>
+        </el-checkbox-group>
+      </div>
       <el-input
           v-model="requestMessage"
           type="textarea"
@@ -105,6 +114,7 @@ const pageSize = ref(10)
 const dialogVisible = ref(false)
 const requestMessage = ref('')
 const selectedAdmin = ref(null)
+const selectedPerms = ref([])
 
 onMounted(() => {
   fetchAdmins()
@@ -165,6 +175,10 @@ const handleRequest = (admin) => {
 }
 
 const confirmRequest = async () => {
+  if (selectedPerms.value.length === 0) {
+    ElMessage.warning('请至少选择一项权限')
+    return
+  }
   if (!requestMessage.value.trim()) {
     ElMessage.warning('请输入申请原因')
     return
@@ -175,7 +189,11 @@ const confirmRequest = async () => {
     const res = await addPermissionRequest({
       userId: userStore.user.id,
       adminId: selectedAdmin.value.id,
-      requestMessage: requestMessage.value
+      requestMessage: requestMessage.value,
+      permCreate: selectedPerms.value.includes('create') ? 1 : 0,
+      permRead: selectedPerms.value.includes('read') ? 1 : 0,
+      permUpdate: selectedPerms.value.includes('update') ? 1 : 0,
+      permDelete: selectedPerms.value.includes('delete') ? 1 : 0
     })
 
     // 成功情况
@@ -189,12 +207,8 @@ const confirmRequest = async () => {
       ElMessage.warning(res.data.msg || '申请提交失败') // 使用warning更合适
     }
   } catch (error) {
-    // 仅处理真正的网络错误（status !== 200）
-    if (!error.response && !res.data.code === '-1') {
-      ElMessage.error('网络错误，请稍后重试')
-      console.error('网络请求失败:', error)
-    }
-    // 其他HTTP错误（如400等）已经在res.data.msg中处理
+    ElMessage.error('网络错误，请稍后重试')
+    console.error('网络请求失败:', error)
   } finally {
     requesting.value = false
   }

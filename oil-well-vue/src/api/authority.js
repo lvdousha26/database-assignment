@@ -29,3 +29,30 @@ export const responseToRequest = (id, status) => {
         params: { id, status }
     });
 };
+
+/**
+ * 获取已授权用户列表
+ * @param {Object} params - 查询参数
+ * @returns {Promise} 已授权用户列表
+ */
+export const getAuthorizedUsers = (params) => {
+    return request.get('/authority/users', { params });
+};
+
+/**
+ * 更新用户授权（收回/修改权限）
+ * @param {number} userId - 用户ID
+ * @param {Object} data - 权限数据
+ * @returns {Promise} 操作结果
+ */
+export const updateUserAuthority = (userId, data) => {
+    return request.put(`/authority/user/${userId}`, null, { params: data });
+};
+
+/**
+ * 获取当前用户的有效权限
+ * @returns {Promise} 当前权限状态
+ */
+export const getMyPermissions = () => {
+    return request.get('/authority/my');
+};

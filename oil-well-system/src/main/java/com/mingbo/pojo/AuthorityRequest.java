@@ -37,6 +37,12 @@ public class AuthorityRequest {
     //申请消息状态
     private byte status;
 
+    //申请权限：增删改查
+    private int permCreate;
+    private int permRead;
+    private int permUpdate;
+    private int permDelete;
+
     //申请信息创建时间
     private Timestamp createdAt;
 

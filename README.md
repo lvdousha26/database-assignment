@@ -265,14 +265,13 @@ docker run -d -p 80:80 --name cost-frontend oil-well-cost-frontend
 │   │       │   ├── AdminFile.vue           # 文件管理
 │   │       │   ├── Profile.vue             # 个人设置
 │   │       │   └── Layout.vue              # 管理员布局
-│   │       ├── user/         # 用户端（7页）
+│   │       ├── user/         # 用户端（6页）
 │   │       │   ├── UsersHome.vue           # 用户首页
 │   │       │   ├── UsersHead.vue           # 用户主页
 │   │       │   ├── UsersAi.vue             # AI 助手
 │   │       │   ├── Function.vue            # 功能页面
 │   │       │   ├── PermissionRequest.vue   # 权限申请
 │   │       │   ├── AuthorityRequestHistory.vue # 权限记录
-│   │       │   ├── SingleModelRetrieval.vue    # 单模型检索
 │   │       │   └── Layout.vue              # 用户布局
 │   │       └── public/       # 公开页面
 │   │           ├── Login.vue

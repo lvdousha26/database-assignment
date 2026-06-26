@@ -121,13 +121,32 @@ public class AuthorityServiceImpl implements AuthorityService {
         }
         authorityRequestMapper.setRequestStatus(id, 1);
         AuthorityRequest request = authorityRequestMapper.getAuthorityRequestById(id);
-        Authority authority = new Authority(
-                request.getUserId(),
-                request.getAdminId(),
-                (byte) 1,
-                new Timestamp(System.currentTimeMillis()),
-                new Timestamp(System.currentTimeMillis()));
-        authorityMapper.addAuthority(authority);
+        Authority existing = authorityMapper.getAuthorityByUserAndAdmin(
+                (long) request.getUserId(), (long) request.getAdminId());
+
+        if (existing != null) {
+            // OR 逻辑：新权限累加到现有权限上
+            authorityMapper.updateUserAuthority(
+                    request.getUserId(), 1,
+                    existing.getPermCreate() | request.getPermCreate(),
+                    existing.getPermRead() | request.getPermRead(),
+                    existing.getPermUpdate() | request.getPermUpdate(),
+                    existing.getPermDelete() | request.getPermDelete()
+            );
+        } else {
+            Authority authority = Authority.builder()
+                    .userId(request.getUserId())
+                    .adminId(request.getAdminId())
+                    .status((byte) 1)
+                    .permCreate(request.getPermCreate())
+                    .permRead(request.getPermRead())
+                    .permUpdate(request.getPermUpdate())
+                    .permDelete(request.getPermDelete())
+                    .createdAt(new Timestamp(System.currentTimeMillis()))
+                    .updatedAt(new Timestamp(System.currentTimeMillis()))
+                    .build();
+            authorityMapper.addAuthority(authority);
+        }
         authorityRequestMapper.updateAuthorityRequestProcessedTime(
                 id, new Timestamp(System.currentTimeMillis()));
         return "Request Accepted";
@@ -146,8 +165,8 @@ public class AuthorityServiceImpl implements AuthorityService {
     }
 
     @Override
-    public PageResult<User> getAuthorizedUserByPage(String username, int pageSize, int currentPage) throws DataAccessException {
-        PageResult<User> pageBean = new PageResult<>();
+    public PageResult<Authority> getAuthorizedUserByPage(String username, int pageSize, int currentPage) throws DataAccessException {
+        PageResult<Authority> pageBean = new PageResult<>();
         pageBean.setTotal(authorityMapper.getAuthoritiesCount(username));
 
         int begin = (currentPage - 1) * pageSize;
@@ -155,12 +174,7 @@ public class AuthorityServiceImpl implements AuthorityService {
         List<Authority> rows =
                 authorityMapper.getAuthoritiesByPage(username, begin, pageSize);
 
-        List<User> users = new ArrayList<>();
-        for (Authority authority : rows) {
-            User user = userMapper.selectById(authority.getUserId());
-            users.add(user);
-        }
-        pageBean.setRecords(users);
+        pageBean.setRecords(rows);
         return pageBean;
     }
 
@@ -173,6 +187,31 @@ public class AuthorityServiceImpl implements AuthorityService {
     public Object setStatus(int status, long id) throws DataAccessException {
         authorityMapper.setStatus(id, status);
         return "操作成功";
+    }
+
+    @Transactional
+    @Override
+    public Object updateUserAuthority(long userId, int status, Integer permCreate, Integer permRead, Integer permUpdate, Integer permDelete) throws DataAccessException {
+        authorityMapper.updateUserAuthority(userId, status, permCreate, permRead, permUpdate, permDelete);
+        return "操作成功";
+    }
+
+    @Override
+    public Authority getMyPermissions(long userId) throws DataAccessException {
+        List<Authority> list = authorityMapper.getActiveAuthoritiesByUserId(userId);
+        if (list.isEmpty()) {
+            return null;
+        }
+        // OR 聚合所有授权记录的权限字段
+        Authority result = list.get(0);
+        for (int i = 1; i < list.size(); i++) {
+            Authority a = list.get(i);
+            result.setPermCreate(result.getPermCreate() | a.getPermCreate());
+            result.setPermRead(result.getPermRead() | a.getPermRead());
+            result.setPermUpdate(result.getPermUpdate() | a.getPermUpdate());
+            result.setPermDelete(result.getPermDelete() | a.getPermDelete());
+        }
+        return result;
     }
 
     private byte getRequestStatus(int id) {

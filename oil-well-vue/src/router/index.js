@@ -40,6 +40,24 @@ const router = createRouter({
         {
           path: '/admin/users',
           component: () => import('@/views/admin/UserManagement.vue')
+        },
+        {
+          path: '/admin/authority',
+          component: () => import('@/views/admin/AdminAuthority.vue')
+        }
+      ]
+    },
+    {
+      path: '/user',
+      component: () => import('@/views/user/Layout.vue'),
+      children: [
+        {
+          path: 'authority',
+          component: () => import('@/views/user/PermissionRequest.vue')
+        },
+        {
+          path: 'history',
+          component: () => import('@/views/user/AuthorityRequestHistory.vue')
         }
       ]
     },

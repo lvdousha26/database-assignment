@@ -2,8 +2,10 @@ package com.mingbo.controller;
 
 import com.mingbo.exception.AuthorityRoleErrorException;
 import com.mingbo.exception.OperationInvalidException;
+import com.mingbo.pojo.Authority;
 import com.mingbo.pojo.AuthorityRequest;
 import com.mingbo.pojo.GeneralRequestDTO;
+import com.mingbo.pojo.PageResult;
 import com.mingbo.pojo.Result;
 import com.mingbo.pojo.User;
 import com.mingbo.service.AuthorityService;
@@ -123,6 +125,53 @@ public class AuthorityController {
                     throw new IllegalArgumentException("Invalid status for response to request");
             }
         } catch (DataAccessException | IllegalArgumentException |OperationInvalidException e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+    /**
+     * 分页查询已授权用户
+     */
+    @GetMapping("/users")
+    public Result getAuthorizedUsers(
+            @RequestParam(defaultValue = "") String username,
+            @RequestParam(defaultValue = "10") int pageSize,
+            @RequestParam(defaultValue = "1") int currentPage) {
+        try {
+            PageResult<?> result = authorityService.getAuthorizedUserByPage(username, pageSize, currentPage);
+            return Result.success(result);
+        } catch (DataAccessException e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+    /**
+     * 更新用户授权（收回/修改权限）
+     */
+    @PutMapping("/user/{userId}")
+    public Result updateUserAuthority(
+            @PathVariable long userId,
+            @RequestParam(defaultValue = "1") int status,
+            @RequestParam(required = false) Integer permCreate,
+            @RequestParam(required = false) Integer permRead,
+            @RequestParam(required = false) Integer permUpdate,
+            @RequestParam(required = false) Integer permDelete) {
+        try {
+            return Result.success(authorityService.updateUserAuthority(userId, status, permCreate, permRead, permUpdate, permDelete));
+        } catch (DataAccessException e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+    /**
+     * 获取当前用户的权限状态
+     */
+    @GetMapping("/my")
+    public Result getMyPermissions() {
+        try {
+            Authority auth = authorityService.getMyPermissions(infoService.getOperateUser());
+            return Result.success(auth);
+        } catch (DataAccessException e) {
             return Result.error(e.getMessage());
         }
     }

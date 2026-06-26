@@ -20,8 +20,8 @@ public interface AuthorityRequestMapper {
      * @param authorityRequest 申请信息
      */
     @Insert("INSERT INTO tb_authorization_request(" +
-            "user_id, admin_id, request_message, created_at)" +
-            "VALUES (#{userId}, #{adminId}, #{requestMessage}, #{createdAt})")
+            "user_id, admin_id, request_message, perm_create, perm_read, perm_update, perm_delete, created_at)" +
+            "VALUES (#{userId}, #{adminId}, #{requestMessage}, #{permCreate}, #{permRead}, #{permUpdate}, #{permDelete}, #{createdAt})")
     void addAuthorityRequest(AuthorityRequest authorityRequest);
 
     /**

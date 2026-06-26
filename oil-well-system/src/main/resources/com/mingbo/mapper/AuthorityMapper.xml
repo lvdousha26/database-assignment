@@ -4,11 +4,12 @@
 
 <mapper namespace="com.mingbo.mapper.AuthorityMapper">
 
-    <!-- 分页查询管理员 -->
+    <!-- 分页查询所有已授权用户（去掉管理员过滤，所有管理员可见） -->
     <select id="getAuthoritiesByPage" resultType="com.mingbo.pojo.Authority">
-        SELECT auth.user_id, auth.admin_id, user.avatar, user.gender, auth.status
-        FROM tb_authorization AS auth, tb_user AS user, tb_user AS user2
-        WHERE auth.admin_id=user2.id AND auth.user_id=user.id AND user2.username = #{username}
+        SELECT auth.user_id, auth.admin_id, user.username, user.avatar, user.gender, auth.status,
+               auth.perm_create, auth.perm_read, auth.perm_update, auth.perm_delete
+        FROM tb_authorization AS auth, tb_user AS user
+        WHERE auth.user_id=user.id
         LIMIT #{offset}, #{pageSize}
     </select>
 </mapper>

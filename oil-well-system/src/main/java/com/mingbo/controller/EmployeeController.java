@@ -52,7 +52,7 @@ public class EmployeeController {
     @PostMapping("/page")
     public Result page(@RequestBody UserDTO userDTO) {
         log.info("用户分页查询，参数为：{}", userDTO);
-        PageResult<User> pageResult = authorityService.getAuthorizedUserByPage(userDTO.getUsername(), userDTO.getPageSize(), userDTO.getCurrentPage());
+        PageResult<?> pageResult = authorityService.getAuthorizedUserByPage(userDTO.getUsername(), userDTO.getPageSize(), userDTO.getCurrentPage());
         return Result.success(pageResult);
     }
 
@@ -64,7 +64,7 @@ public class EmployeeController {
     @PostMapping("/list")
     public Result selectAll(@RequestBody UserDTO userDTO) {
         log.info("用户分页查询，参数为：{}", userDTO);
-        PageResult<User> pageResult = authorityService.getAuthorizedUserByPage(userDTO.getUsername(), userDTO.getPageSize(), userDTO.getCurrentPage());
+        PageResult<?> pageResult = authorityService.getAuthorizedUserByPage(userDTO.getUsername(), userDTO.getPageSize(), userDTO.getCurrentPage());
         return Result.success(pageResult);
     }
 

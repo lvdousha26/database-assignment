@@ -1,6 +1,6 @@
 <script setup>
 import {
-  DataAnalysis, Platform, Tools, Money, ChatDotSquare, User, Message, UserFilled
+  DataAnalysis, Platform, Tools, Money, ChatDotSquare, User, Message, UserFilled, Lock
 } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 import { useRoute } from "vue-router";
@@ -11,7 +11,7 @@ const route = useRoute();
 const userStore = useUserStore();
 
 const iconMap = {
-  DataAnalysis, Platform, Tools, Money, ChatDotSquare, User, Message, UserFilled
+  DataAnalysis, Platform, Tools, Money, ChatDotSquare, User, Message, UserFilled, Lock
 };
 
 const menuItems = [
@@ -22,6 +22,7 @@ const menuItems = [
   { name: 'AI 助手', path: '/admin/ai', icon: 'ChatDotSquare' },
   { name: '消息', path: '/admin/message', icon: 'Message' },
   { name: '用户管理', path: '/admin/users', icon: 'UserFilled', adminOnly: true },
+  { name: '权限管理', path: '/admin/authority', icon: 'Lock', adminOnly: true },
   { name: '个人主页', path: '/admin/profile', icon: 'User' },
 ]
 </script>

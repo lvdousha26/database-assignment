@@ -54,9 +54,13 @@ public interface AuthorityService {
      */
     Object rejectRequest(int id) throws DataAccessException, OperationInvalidException;
 
-    PageResult<User> getAuthorizedUserByPage(String username, int pageSize, int currentPage) throws DataAccessException;
+    PageResult<Authority> getAuthorizedUserByPage(String username, int pageSize, int currentPage) throws DataAccessException;
 
     int isAuthorizedUser(long id) throws DataAccessException;
 
     Object setStatus(@PathVariable int status, @PathVariable long id) throws DataAccessException;
+
+    Object updateUserAuthority(long userId, int status, Integer permCreate, Integer permRead, Integer permUpdate, Integer permDelete) throws DataAccessException;
+
+    Authority getMyPermissions(long userId) throws DataAccessException;
 }
