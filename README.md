@@ -2,6 +2,8 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
+> 页面预览：[database-sql-code/README.md](https://github.com/lvdousha26/database-sql-code/blob/main/README.md)
+
 基于 B/S (Browser/Server) 架构的采油厂油水井作业成本管理平台，涵盖油水井信息管理、作业成本核算、成本分析预测、AI 智能问答、站内消息、个人主页与动态、权限控制等功能。
 
 ## 技术栈
