@@ -1,5 +1,7 @@
 # 采油厂油水井作业成本管理系统
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 基于 B/S (Browser/Server) 架构的采油厂油水井作业成本管理平台，涵盖油水井信息管理、作业成本核算、成本分析预测、AI 智能问答、站内消息、个人主页与动态、权限控制等功能。
 
 ## 技术栈
@@ -183,41 +185,27 @@ npm run dev
 
 ## Docker 部署
 
-### Docker Compose（本地运行）
+### 一键运行（推荐）
 
-项目根目录已提供 `docker-compose.yml`，一键启动全部服务：
+项目提供统一 Docker 镜像，包含 MySQL + Redis + 后端 + 前端全部组件：
 
 ```bash
-# 构建并启动所有服务
-docker-compose up -d
-
-# 查看日志
-docker-compose logs -f
-
-# 停止服务
-docker-compose down
+# 拉取并启动
+docker run -d --name oil-well -p 82:80 lvdousha26/database-lvdousha:latest
 ```
 
-启动后访问：
-- 前端：`http://localhost:80`
-- 后端 API：`http://localhost:8080`
+首次启动自动初始化数据库（建表 + 种子数据），就绪后访问 `http://localhost:82`。
 
-### 单独构建
-
-**后端镜像：**
+### Docker Compose
 
 ```bash
-cd oil-well-system
-docker build -t oil-well-cost-backend .
-docker run -d -p 8080:8080 --name cost-backend oil-well-cost-backend
+docker compose up -d
 ```
 
-**前端镜像：**
+### 停止
 
 ```bash
-cd oil-well-vue
-docker build -t oil-well-cost-frontend .
-docker run -d -p 80:80 --name cost-frontend oil-well-cost-frontend
+docker compose down
 ```
 
 ---
@@ -284,9 +272,14 @@ docker run -d -p 80:80 --name cost-frontend oil-well-cost-frontend
 │   └── worker.js
 ├── assets/                   # 静态资源（头像、背景图等）
 ├── mysql-data/               # MySQL 本地数据卷
-├── start.bat                 # Windows 一键启动脚本
+├── start.bat                 # Windows 一键启动脚本（Docker 模式）
 ├── schema.sql                # 数据库建库建表脚本
-├── docker-compose.yml        # Docker Compose 本地部署
-├── railway.toml              # Railway 部署配置
+├── Dockerfile                # 统一 Docker 镜像（MySQL+Redis+后端+前端）
+├── docker-compose.yml        # Docker Compose 一键部署
+├── .dockerignore
 └── README.md                 # 本文档
+
+## License
+
+[MIT](LICENSE) © 2026 lvdousha
 ```

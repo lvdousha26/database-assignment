@@ -1,8 +1,8 @@
 FROM maven:3.9-eclipse-temurin-17 AS build
 WORKDIR /app
-COPY oil-well-system/pom.xml .
-RUN mvn dependency:go-offline -B
-COPY oil-well-system/src ./src
+COPY pom.xml .
+RUN mvn dependency:go-offline -B 2>/dev/null || true
+COPY src ./src
 RUN mvn package -DskipTests -q
 
 FROM eclipse-temurin:17-jre
