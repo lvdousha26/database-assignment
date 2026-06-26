@@ -13,6 +13,8 @@ const loading = ref(false)
 const dialogVisible = ref(false)
 const isEdit = ref(false)
 const formRef = ref(null)
+const saving = ref(false)
+const deleting = ref(false)
 
 const searchForm = ref({
   wellcode: '',
@@ -128,20 +130,24 @@ const handleEdit = (row) => {
 }
 
 const handleDelete = (code) => {
+  if (deleting.value) return
   ElMessageBox.confirm('确定要删除该成本记录吗？', '确认删除', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'
   }).then(async () => {
+    deleting.value = true
     await deleteCost(code)
     ElMessage.success('删除成功')
     loadData()
-  }).catch(() => {})
+  }).catch(() => {}).finally(() => { deleting.value = false })
 }
 
 const handleSave = async () => {
+  if (saving.value) return
   const valid = await formRef.value.validate().catch(() => false)
   if (!valid) return
+  saving.value = true
   try {
     if (isEdit.value) {
       await updateCost(form.value)
@@ -154,6 +160,8 @@ const handleSave = async () => {
     loadData()
   } catch (e) {
     // error handled by interceptor
+  } finally {
+    saving.value = false
   }
 }
 
@@ -432,7 +440,7 @@ onMounted(() => {
 
       <template #footer>
         <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="handleSave">保存</el-button>
+        <el-button type="primary" :loading="saving" @click="handleSave">保存</el-button>
       </template>
     </el-dialog>
   </div>

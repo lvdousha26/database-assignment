@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -21,6 +22,9 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
     @Autowired
     private RedisService redisService;
 
+    @Value("${app.debug-mode:false}")
+    private boolean debugMode;
+
     @Override
     public boolean preHandle(HttpServletRequest req, HttpServletResponse resp, Object handler) throws Exception {
         if ("OPTIONS".equalsIgnoreCase(req.getMethod())) {
@@ -30,9 +34,7 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
         String url = req.getRequestURL().toString();
         log.info("请求的url: {}", url);
 
-        boolean DEBUG_MODE = true;
-
-        if (DEBUG_MODE) {
+        if (debugMode) {
             try {
                 String jwt = req.getHeader("token");
                 String userId = "debug";

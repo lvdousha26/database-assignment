@@ -15,6 +15,8 @@ const loading = ref(false)
 const dialogVisible = ref(false)
 const isEdit = ref(false)
 const formRef = ref(null)
+const saving = ref(false)
+const deleting = ref(false)
 
 const wellOptions = ref([])
 const operationTypeOptions = ref([])
@@ -116,10 +118,12 @@ const handleEdit = (row) => {
 }
 
 const handleDelete = async (id) => {
+  if (deleting.value) return
   try {
     await ElMessageBox.confirm('确认删除该作业吗？', '提示', {
       confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning'
     })
+    deleting.value = true
     const res = await deleteOperation(id)
     if (res.data.code === '1') {
       ElMessage.success('删除成功')
@@ -127,12 +131,16 @@ const handleDelete = async (id) => {
     }
   } catch (e) {
     // cancel or error
+  } finally {
+    deleting.value = false
   }
 }
 
 const handleSave = async () => {
+  if (saving.value) return
   if (!formRef.value) return
   await formRef.value.validate()
+  saving.value = true
 
   let res
   if (isEdit.value) {
@@ -146,6 +154,7 @@ const handleSave = async () => {
     dialogVisible.value = false
     loadData()
   }
+  saving.value = false
 }
 
 const handlePageChange = (page) => {
@@ -293,7 +302,7 @@ onMounted(() => {
       </el-form>
       <template #footer>
         <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="handleSave">保存</el-button>
+        <el-button type="primary" :loading="saving" @click="handleSave">保存</el-button>
       </template>
     </el-dialog>
   </div>

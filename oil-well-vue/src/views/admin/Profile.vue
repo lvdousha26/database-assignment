@@ -12,6 +12,7 @@ const user = computed(() => userStore.user)
 const editUsernameDialog = ref(false)
 const newUsername = ref('')
 const uploading = ref({ avatar: false, background: false })
+const savingUsername = ref(false)
 
 // 动态相关
 const dynamics = ref([])
@@ -179,10 +180,8 @@ const openEditUsername = () => {
 }
 
 const saveUsername = async () => {
-  if (!newUsername.value || newUsername.value.trim() === '') {
-    ElMessage.warning('用户名不能为空')
-    return
-  }
+  if (!newUsername.value || newUsername.value.trim() === '' || savingUsername.value) return
+  savingUsername.value = true
   try {
     const res = await updateUsernameService({
       oldUsername: user.value.username,
@@ -197,6 +196,8 @@ const saveUsername = async () => {
     }
   } catch (e) {
     ElMessage.error('用户名更新失败')
+  } finally {
+    savingUsername.value = false
   }
 }
 </script>
@@ -362,7 +363,7 @@ const saveUsername = async () => {
       </el-form>
       <template #footer>
         <el-button @click="editUsernameDialog = false">取消</el-button>
-        <el-button type="primary" @click="saveUsername">保存</el-button>
+        <el-button type="primary" :loading="savingUsername" @click="saveUsername">保存</el-button>
       </template>
     </el-dialog>
   </div>

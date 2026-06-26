@@ -25,12 +25,15 @@ instance.interceptors.request.use(
 // 响应拦截器
 instance.interceptors.response.use(
   (res) => {
-    // TODO 4. 摘取核心响应数据
     if (res.data.code == '1') {
       return res
     }
-    // TODO 3. 处理业务失败
-    // 处理业务失败, 给错误提示，抛出错误
+    if (res.data.msg === 'NOT_LOGIN') {
+      const useStore = useUserStore()
+      useStore.removeToken()
+      router.push('/login')
+      return Promise.reject(res.data)
+    }
     ElMessage.error(res.data.msg || '服务异常')
     return Promise.reject(res.data)
   },

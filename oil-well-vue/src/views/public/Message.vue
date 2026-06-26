@@ -73,7 +73,7 @@
             @keyup.enter.native="sendMessage"
         ></el-input>
         <div class="input-actions">
-          <el-button type="primary" @click="sendMessage">发送</el-button>
+          <el-button type="primary" :loading="sending" @click="sendMessage">发送</el-button>
         </div>
       </div>
     </div>
@@ -101,6 +101,7 @@ export default {
       messages: [], // 当前联系人的消息列表
       newMessage: '', // 新消息内容
       loading: false,
+      sending: false,
       hasMore: true,
       currentPage: 1,
       pageSize: 10,
@@ -249,7 +250,8 @@ export default {
     },
 
     async sendMessage() {
-      if (!this.newMessage.trim() || this.activeContact === 0) return
+      if (!this.newMessage.trim() || this.activeContact === 0 || this.sending) return
+      this.sending = true
 
       try {
         const res = await sendMessage({
@@ -282,6 +284,8 @@ export default {
         }
       } catch (error) {
         console.error('发送消息失败:', error)
+      } finally {
+        this.sending = false
       }
     },
 

@@ -7,6 +7,10 @@ import { Plus } from '@element-plus/icons-vue';
 
 const userStore = useUserStore();
 
+const avatarLoading = ref(false)
+const profileLoading = ref(false)
+const passwordLoading = ref(false)
+
 // 基本资料表单
 const profileForm = ref({
   id: userStore.user.id,
@@ -34,6 +38,8 @@ const onUploadSuccess = (response) => {
 
 // 更新基本资料
 const updateProfile = async () => {
+  if (profileLoading.value) return
+  profileLoading.value = true
   try {
     const res = await userUpdateInfoService(profileForm.value);
     if (res.data.msg === 'success') {
@@ -42,11 +48,15 @@ const updateProfile = async () => {
     }
   } catch (error) {
     ElMessage.error('资料更新失败');
+  } finally {
+    profileLoading.value = false
   }
 };
 
 // 更新头像
 const updateAvatar = async () => {
+  if (avatarLoading.value) return
+  avatarLoading.value = true
   try {
     const res = await userUpdateAvatarService({
       id: userStore.user.id,
@@ -58,11 +68,15 @@ const updateAvatar = async () => {
     }
   } catch (error) {
     ElMessage.error('头像更新失败');
+  } finally {
+    avatarLoading.value = false
   }
 };
 
 // 更新密码
 const updatePassword = async () => {
+  if (passwordLoading.value) return
+  passwordLoading.value = true
   try {
     const res = await userUpdatePasswordService(passwordForm.value);
     if (res.data.msg === 'success') {
@@ -76,6 +90,8 @@ const updatePassword = async () => {
     }
   } catch (error) {
     ElMessage.error('密码更新失败');
+  } finally {
+    passwordLoading.value = false
   }
 };
 
@@ -130,7 +146,7 @@ const passwordRules = ref({
               <Plus/>
             </el-icon>
           </el-upload>
-          <el-button type="success" @click="updateAvatar" class="avatar-btn">更新头像</el-button>
+          <el-button type="success" :loading="avatarLoading" @click="updateAvatar" class="avatar-btn">更新头像</el-button>
         </div>
 
         <div class="profile-form-container">
@@ -146,7 +162,7 @@ const passwordRules = ref({
               <el-input v-model="profileForm.addr"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="updateProfile">保存资料</el-button>
+              <el-button type="primary" :loading="profileLoading" @click="updateProfile">保存资料</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -170,7 +186,7 @@ const passwordRules = ref({
             <el-input v-model="passwordForm.re_pwd" type="password" show-password></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="updatePassword">修改密码</el-button>
+            <el-button type="primary" :loading="passwordLoading" @click="updatePassword">修改密码</el-button>
           </el-form-item>
         </el-form>
       </div>

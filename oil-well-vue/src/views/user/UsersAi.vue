@@ -34,7 +34,7 @@
           placeholder="请输入您的问题..."
           @keyup.enter="sendQuestion"
         ></el-input>
-        <el-button type="primary" @click="sendQuestion">发送</el-button>
+        <el-button type="primary" :loading="isLoading" @click="sendQuestion">发送</el-button>
       </div>
     </div>
   </page-container-view>

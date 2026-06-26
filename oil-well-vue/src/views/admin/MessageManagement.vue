@@ -11,6 +11,7 @@ const activeContact = ref(null)
 const messages = ref([])
 const inputText = ref('')
 const loading = ref(false)
+const sending = ref(false)
 const messagesEnd = ref(null)
 const unreadCount = ref(0)
 
@@ -59,7 +60,8 @@ const openConversation = async (contact) => {
 }
 
 const doSend = async () => {
-  if (!inputText.value.trim() || !activeContact.value) return
+  if (!inputText.value.trim() || !activeContact.value || sending.value) return
+  sending.value = true
   const text = inputText.value.trim()
   inputText.value = ''
   try {
@@ -80,6 +82,8 @@ const doSend = async () => {
     }
   } catch (e) {
     ElMessage.error('发送失败')
+  } finally {
+    sending.value = false
   }
 }
 
@@ -191,7 +195,7 @@ onMounted(() => {
               placeholder="输入消息..."
               @keydown.enter.prevent="doSend"
             />
-            <el-button type="primary" @click="doSend" :disabled="!inputText.trim()">发送</el-button>
+            <el-button type="primary" :loading="sending" @click="doSend" :disabled="!inputText.trim()">发送</el-button>
           </div>
         </template>
         <template v-else>

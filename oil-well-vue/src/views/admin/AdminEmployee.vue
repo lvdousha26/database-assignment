@@ -13,6 +13,7 @@ import {
 import { useUserStore } from "@/stores";
 import { useRouter } from "vue-router";
 import { onMounted } from "vue";
+import { ElMessage, ElMessageBox } from 'element-plus'
 import {
   SwitchButton,
   Avatar,
@@ -49,6 +50,8 @@ const employee = ref({
   addr: "",
   password: ""
 });
+const submitting = ref(false)
+const batchDeleting = ref(false)
 // 被选中的id数组
 const selectedIds = ref([]);
 // 复选框选中数据集合
@@ -172,6 +175,8 @@ const onSubmit = () => {
 };
 // 添加或修改学生
 const addemployee = async (title) => {
+  if (submitting.value) return
+  submitting.value = true
   try {
     let resp;
     if (title == "新增") {
@@ -191,6 +196,8 @@ const addemployee = async (title) => {
   } catch (err) {
     console.error("操作失败:", err);
     ElMessage.error("操作失败，请稍后再试");
+  } finally {
+    submitting.value = false
   }
 };
 const selectByPageAndCondition = async () => {
@@ -329,6 +336,7 @@ const enableById = async (status, id) => {
 };
 //批量删除
 const deleteByIds = async () => {
+  if (batchDeleting.value) return
   try {
     // 弹出确认提示框
     await ElMessageBox.confirm("此操作将删除该数据, 是否继续?", "提示", {
@@ -336,6 +344,7 @@ const deleteByIds = async () => {
       cancelButtonText: "取消",
       type: "warning",
     });
+    batchDeleting.value = true
 
     // 用户点击确认按钮
     // 1. 创建 id 数组 [1,2,3], 从 this.multipleSelection 获取即可
@@ -377,6 +386,8 @@ const deleteByIds = async () => {
         type: "error",
       });
     }
+  } finally {
+    batchDeleting.value = false
   }
 };
 </script>
@@ -400,7 +411,7 @@ const deleteByIds = async () => {
       <!--按钮-->
 
       <el-row>
-        <el-button type="danger" plain @click="deleteByIds">批量删除</el-button>
+        <el-button type="danger" plain :loading="batchDeleting" @click="deleteByIds">批量删除</el-button>
         <el-button type="primary" plain @click="dialogBox('新增')"
           >新增</el-button
         >
@@ -457,6 +468,7 @@ const deleteByIds = async () => {
               <el-button
                 style="margin-left: 300px"
                 type="primary"
+                :loading="submitting"
                 @click="addemployee(title)"
                 >提交</el-button
               >

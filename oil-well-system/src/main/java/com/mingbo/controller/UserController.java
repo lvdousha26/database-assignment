@@ -1,5 +1,6 @@
 package com.mingbo.controller;
 
+import com.mingbo.anno.RateLimit;
 import com.mingbo.pojo.Result;
 import com.mingbo.pojo.User;
 import com.mingbo.service.UserService;
@@ -21,6 +22,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/login")
+    @RateLimit(maxRequests = 5, windowSeconds = 60)
     public Result login(@RequestParam String username,
                         @RequestParam String password) {
         User user = userService.getByUsernameAndPassword(username, password);
