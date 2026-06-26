@@ -252,7 +252,7 @@ onMounted(() => {
     >
       <el-form ref="formRef" :model="form" label-width="100px" :rules="formRules">
         <el-form-item label="作业名称" prop="operationName">
-          <el-input v-model="form.operationName" placeholder="请输入作业名称" />
+          <el-input v-model="form.operationName" placeholder="请输入作业名称" maxlength="200" />
         </el-form-item>
         <el-row :gutter="20">
           <el-col :span="12">
@@ -285,12 +285,12 @@ onMounted(() => {
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="队伍" prop="team">
-              <el-input v-model="form.teamName" placeholder="请输入队伍名称" />
+              <el-input v-model="form.teamName" placeholder="请输入队伍名称" maxlength="100" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="队长" prop="teamLeader">
-              <el-input v-model="form.teamLeader" placeholder="请输入队长姓名" />
+              <el-input v-model="form.teamLeader" placeholder="请输入队长姓名" maxlength="50" />
             </el-form-item>
           </el-col>
         </el-row>

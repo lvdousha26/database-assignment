@@ -236,7 +236,7 @@ onMounted(() => {
     >
       <el-form ref="formRef" :model="form" label-width="100px" :rules="formRules">
         <el-form-item label="井号" prop="wellName">
-          <el-input v-model="form.wellName" placeholder="请输入井号" />
+          <el-input v-model="form.wellName" placeholder="请输入井号" maxlength="100" />
         </el-form-item>
         <el-row :gutter="20">
           <el-col :span="12">
@@ -257,12 +257,12 @@ onMounted(() => {
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="所属油田" prop="fieldName">
-              <el-input v-model="form.fieldName" placeholder="请输入油田名称" />
+              <el-input v-model="form.fieldName" placeholder="请输入油田名称" maxlength="100" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="层位" prop="layer">
-              <el-input v-model="form.layer" placeholder="请输入层位" />
+              <el-input v-model="form.layer" placeholder="请输入层位" maxlength="100" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -274,7 +274,7 @@ onMounted(() => {
           </el-col>
           <el-col :span="12">
             <el-form-item label="负责人" prop="operator">
-              <el-input v-model="form.operator" placeholder="请输入负责人" />
+              <el-input v-model="form.operator" placeholder="请输入负责人" maxlength="100" />
             </el-form-item>
           </el-col>
         </el-row>

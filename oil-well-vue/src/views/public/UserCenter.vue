@@ -156,7 +156,7 @@ const passwordRules = ref({
               <el-input v-model="profileForm.username" disabled></el-input>
             </el-form-item>
             <el-form-item label="性别">
-              <el-input v-model="profileForm.gender"></el-input>
+              <el-input v-model="profileForm.gender" maxlength="10"></el-input>
             </el-form-item>
             <el-form-item label="地址">
               <el-input v-model="profileForm.addr"></el-input>
@@ -177,13 +177,13 @@ const passwordRules = ref({
             class="password-form"
         >
           <el-form-item label="原密码" prop="old_pwd">
-            <el-input v-model="passwordForm.old_pwd" type="password" show-password></el-input>
+            <el-input v-model="passwordForm.old_pwd" type="password" show-password maxlength="100"></el-input>
           </el-form-item>
           <el-form-item label="新密码" prop="new_pwd">
-            <el-input v-model="passwordForm.new_pwd" type="password" show-password></el-input>
+            <el-input v-model="passwordForm.new_pwd" type="password" show-password maxlength="100"></el-input>
           </el-form-item>
           <el-form-item label="确认密码" prop="re_pwd">
-            <el-input v-model="passwordForm.re_pwd" type="password" show-password></el-input>
+            <el-input v-model="passwordForm.re_pwd" type="password" show-password maxlength="100"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" :loading="passwordLoading" @click="updatePassword">修改密码</el-button>

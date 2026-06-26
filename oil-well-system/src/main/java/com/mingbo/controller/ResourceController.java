@@ -7,6 +7,7 @@ import com.mingbo.pojo.Result;
 import com.mingbo.service.MetaDataService;
 import com.mingbo.service.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.util.HtmlUtils;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,7 +57,7 @@ public class ResourceController {
         // 记录资源元数据
         ReferenceResource ref = new ReferenceResource();
         ref.setAdminId(request.getId());
-        ref.setOriginalName(file.getOriginalFilename());
+        ref.setOriginalName(HtmlUtils.htmlEscape(file.getOriginalFilename()));
         ref.setStoragePath(refPath);
         ref.setResourceType(request.getResourceType());
         ref.setDescription(request.getDescription());

@@ -425,10 +425,10 @@ const deleteByIds = async () => {
       >
         <el-form ref="form" :model="employee" label-width="80px">
           <el-form-item label="用户名">
-            <el-input v-model="employee.username"></el-input>
+            <el-input v-model="employee.username" maxlength="50"></el-input>
           </el-form-item>
           <el-form-item label="密码">
-            <el-input type="password" v-model="employee.password"></el-input>
+            <el-input type="password" v-model="employee.password" maxlength="100"></el-input>
           </el-form-item>
           <el-form-item label="">
             <el-upload
@@ -449,11 +449,11 @@ const deleteByIds = async () => {
           </el-form-item>
 
           <el-form-item label="用户性别">
-            <el-input v-model="employee.gender"></el-input>
+            <el-input v-model="employee.gender" maxlength="10"></el-input>
           </el-form-item>
 
           <el-form-item label="用户地址">
-            <el-input type="textarea" v-model="employee.addr"></el-input>
+            <el-input type="textarea" v-model="employee.addr" maxlength="200"></el-input>
           </el-form-item>
 
           <el-form-item label="用户状态">
@@ -486,18 +486,18 @@ const deleteByIds = async () => {
       >
         <el-form ref="form" :model="employee" label-width="80px">
           <el-form-item label="用户名">
-            <el-input v-model="employee.username"></el-input>
+            <el-input v-model="employee.username" maxlength="50"></el-input>
           </el-form-item>
           <el-form-item label="用户头像">
             <img :src="employee.avatar || '@/assets/logo.svg'" class="avatar" />
           </el-form-item>
 
           <el-form-item label="用户性别">
-            <el-input v-model="employee.gender"></el-input>
+            <el-input v-model="employee.gender" maxlength="10"></el-input>
           </el-form-item>
 
           <el-form-item label="用户地址">
-            <el-input type="textarea" v-model="employee.addr"></el-input>
+            <el-input type="textarea" v-model="employee.addr" maxlength="200"></el-input>
           </el-form-item>
 
           <el-form-item label="用户状态">

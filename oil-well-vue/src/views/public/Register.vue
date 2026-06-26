@@ -310,7 +310,7 @@ const verify = async () => {
                 v-model.trim="user.username"
                 type="text"
                 id="username"
-                placeholder="请输入用户名"
+                placeholder="请输入用户名" maxlength="50"
             />
           </div>
         </div>
@@ -324,7 +324,7 @@ const verify = async () => {
                 v-model.trim="user.password"
                 type="password"
                 id="password"
-                placeholder="请输入密码"
+                placeholder="请输入密码" maxlength="100"
             />
           </div>
         </div>

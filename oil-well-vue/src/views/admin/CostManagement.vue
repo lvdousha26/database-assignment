@@ -317,13 +317,13 @@ onMounted(() => {
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="费用编号" prop="code">
-              <el-input v-model="form.code" placeholder="费用编号" :disabled="isEdit" />
+              <el-input v-model="form.code" placeholder="费用编号" :disabled="isEdit" maxlength="20" />
             </el-form-item>
             <el-form-item label="预算单位" prop="preunit">
-              <el-input v-model="form.preunit" placeholder="采油队代码" />
+              <el-input v-model="form.preunit" placeholder="采油队代码" maxlength="20" />
             </el-form-item>
             <el-form-item label="井号" prop="wellcode">
-              <el-input v-model="form.wellcode" placeholder="油水井编号" />
+              <el-input v-model="form.wellcode" placeholder="油水井编号" maxlength="20" />
             </el-form-item>
             <el-form-item label="预算金额">
               <el-input-number v-model="form.premoney" :min="0" :precision="2" style="width:100%" />
@@ -331,7 +331,7 @@ onMounted(() => {
           </el-col>
           <el-col :span="12">
             <el-form-item label="编制人">
-              <el-input v-model="form.person" placeholder="预算编制人" />
+              <el-input v-model="form.person" placeholder="预算编制人" maxlength="20" />
             </el-form-item>
             <el-form-item label="预算日期" prop="predate">
               <el-date-picker v-model="form.predate" type="date" value-format="YYYY-MM-DD" style="width:100%" />
@@ -349,12 +349,12 @@ onMounted(() => {
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="结算单位" prop="settleunit">
-              <el-input v-model="form.settleunit" placeholder="施工/结算单位" />
+              <el-input v-model="form.settleunit" placeholder="施工/结算单位" maxlength="20" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="作业内容">
-              <el-input v-model="form.content" placeholder="作业内容" />
+              <el-input v-model="form.content" placeholder="作业内容" maxlength="20" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -364,7 +364,7 @@ onMounted(() => {
           <el-row :gutter="20" class="mat-row">
             <el-col :span="6">
               <el-form-item :label="`材料${i}编码`" :label-width="100">
-                <el-input v-model="form['mat' + i + 'Code']" :placeholder="`材料${i}编码`" />
+                <el-input v-model="form['mat' + i + 'Code']" :placeholder="`材料${i}编码`" maxlength="20" />
               </el-form-item>
             </el-col>
             <el-col :span="5">
@@ -410,7 +410,7 @@ onMounted(() => {
               <el-input-number v-model="form.settlecost" :min="0" :precision="2" style="width:100%" />
             </el-form-item>
             <el-form-item label="结算经办人">
-              <el-input v-model="form.settleperson" placeholder="结算经办人" />
+              <el-input v-model="form.settleperson" placeholder="结算经办人" maxlength="20" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -427,7 +427,7 @@ onMounted(() => {
               <el-input-number v-model="form.finalcost" :min="0" :precision="2" style="width:100%" />
             </el-form-item>
             <el-form-item label="终审人">
-              <el-input v-model="form.finalperson" placeholder="终审人" />
+              <el-input v-model="form.finalperson" placeholder="终审人" maxlength="20" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
