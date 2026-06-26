@@ -225,38 +225,69 @@ docker run -d -p 80:80 --name cost-frontend oil-well-cost-frontend
 ## 项目结构
 
 ```
-├── oil-well-system/    # 后端 Spring Boot 项目
+├── oil-well-system/          # 后端 Spring Boot 3 + JDK 17
 │   ├── src/main/java/com/mingbo/
-│   │   ├── anno/          # 自定义注解
-│   │   ├── aop/           # AOP 切面（日志、限流、缓存）
-│   │   ├── config/        # 配置类（Redis, WebMvc）
-│   │   ├── controller/    # REST API 控制器
-│   │   ├── exception/     # 全局异常处理
-│   │   ├── interceptor/   # 登录拦截器
-│   │   ├── mapper/        # MyBatis Mapper 接口
-│   │   ├── pojo/          # 实体类 / DTO
-│   │   ├── repository/    # Spring Data JPA Repository
-│   │   ├── service/       # 业务逻辑层
-│   │   └── util/          # 工具类（JWT）
+│   │   ├── anno/             # 自定义注解（@AutoCache、@Log、@RateLimit）
+│   │   ├── aop/              # AOP 切面（CacheAspect、LogAspect、RateLimitAspect）
+│   │   ├── config/           # 配置类（WebMvcConfig）
+│   │   ├── controller/       # REST API 控制器（15 个）
+│   │   ├── exception/        # 全局异常处理 + 自定义异常
+│   │   ├── interceptor/      # 登录拦截器（LoginCheckInterceptor）
+│   │   ├── mapper/           # MyBatis Mapper 接口（12 个）
+│   │   ├── pojo/             # 实体类 / DTO（26 个）
+│   │   ├── service/          # 业务接口 + impl 实现
+│   │   │   └── impl/         # 含 ToolDefinition/ToolExecutor（AI 工具调用）
+│   │   └── util/             # 工具类（JwtUtils）
 │   └── src/main/resources/
 │       ├── application.yml
+│       ├── schema.sql
 │       └── system_messages.properties
 │
-├── oil-well-vue/       # 前端 Vue 3 项目
+├── oil-well-vue/             # 前端 Vue 3 + Vite 6
 │   ├── src/
-│   │   ├── api/           # API 请求模块
-│   │   ├── components/    # 公共组件
-│   │   ├── router/        # 路由配置
-│   │   ├── stores/        # Pinia 状态管理
-│   │   ├── utils/         # 工具函数
-│   │   └── views/         # 页面组件
+│   │   ├── api/              # Axios 请求封装（按模块分文件）
+│   │   ├── components/       # 公共组件（BrandAside 侧边栏）
+│   │   ├── router/           # Vue Router + 导航守卫
+│   │   ├── stores/           # Pinia 状态管理（user + token，persist 持久化）
+│   │   ├── utils/            # 工具函数
+│   │   └── views/
+│   │       ├── admin/        # 管理员端（12页）
+│   │       │   ├── AdminHome.vue           # 仪表盘首页
+│   │       │   ├── AdminEcharts.vue        # ECharts 可视化大屏
+│   │       │   ├── CostManagement.vue      # 成本管理
+│   │       │   ├── WellManagement.vue      # 油水井管理
+│   │       │   ├── UserManagement.vue      # 用户管理
+│   │       │   ├── OperationManagement.vue # 作业管理
+│   │       │   ├── MessageManagement.vue   # 消息管理
+│   │       │   ├── AIChat.vue              # AI 智能问答
+│   │       │   ├── AdminAuthority.vue      # 权限管理
+│   │       │   ├── AdminEmployee.vue       # 员工管理
+│   │       │   ├── AdminFile.vue           # 文件管理
+│   │       │   ├── Profile.vue             # 个人设置
+│   │       │   └── Layout.vue              # 管理员布局
+│   │       ├── user/         # 用户端（7页）
+│   │       │   ├── UsersHome.vue           # 用户首页
+│   │       │   ├── UsersHead.vue           # 用户主页
+│   │       │   ├── UsersAi.vue             # AI 助手
+│   │       │   ├── Function.vue            # 功能页面
+│   │       │   ├── PermissionRequest.vue   # 权限申请
+│   │       │   ├── AuthorityRequestHistory.vue # 权限记录
+│   │       │   ├── SingleModelRetrieval.vue    # 单模型检索
+│   │       │   └── Layout.vue              # 用户布局
+│   │       └── public/       # 公开页面
+│   │           ├── Login.vue
+│   │           ├── Register.vue
+│   │           ├── Message.vue
+│   │           └── UserCenter.vue
 │   └── package.json
 │
-├── cloudflare-worker/                     # Cloudflare Worker 转发代理
+├── cloudflare-worker/        # Cloudflare Worker API 转发代理
 │   └── worker.js
-├── start.bat                              # Windows 一键启动脚本
-├── schema.sql                             # 数据库初始化脚本（含 tb_message、tb_dynamic）
-├── docker-compose.yml                     # Docker Compose 配置
-├── railway.toml                           # Railway 部署配置
-└── README.md                              # 本文档
+├── assets/                   # 静态资源（头像、背景图等）
+├── mysql-data/               # MySQL 本地数据卷
+├── start.bat                 # Windows 一键启动脚本
+├── schema.sql                # 数据库建库建表脚本
+├── docker-compose.yml        # Docker Compose 本地部署
+├── railway.toml              # Railway 部署配置
+└── README.md                 # 本文档
 ```
